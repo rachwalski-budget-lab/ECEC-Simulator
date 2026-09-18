@@ -79,7 +79,7 @@ KY  &  81,326 &  80,604 & 161,930 & 50\% \\
 NJ  & 173,225 & 136,721 & 309,946 & 56\% \\
 NY  & 270,982 & 378,847 & 649,829 & 42\% \\
 NYC & 132,065 & 169,911 & 301,976 & 44\% \\
-VA  & 135,068 & 127,932 & 263,000 & 51\% \\
+VA  & 134,434 & 128,566 & 263,000 & 51\% \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -96,7 +96,7 @@ KY  &  4,756 &  75,848 \\
 NJ  &  1,987 & 134,734 \\
 NY  & 96,366 & 282,481 \\
 NYC & 38,642 & 131,269 \\
-VA  &  4,743 & 123,189 \\
+VA  &  5,377 & 123,189 \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -116,9 +116,9 @@ are not weighted survey figures.
 \toprule
 & \textbf{KY} & \textbf{NJ} & \textbf{NY} & \textbf{NYC} & \textbf{VA} \\
 \midrule
-Center-Based        & 37,550 & 116,402 & 168,235 &  86,337 &  87,192 \\
+Center-Based        & 37,550 & 116,402 & 168,235 &  86,337 &  86,558 \\
 Unpaid Center-Based & 43,776 &  56,823 & 102,747 &  45,728 &  47,876 \\
-Paid Home-Based     &  4,756 &   1,987 &  96,366 &  38,642 &   4,743 \\
+Paid Home-Based     &  4,756 &   1,987 &  96,366 &  38,642 &   5,377 \\
 Other Unpaid        & 45,830 &  81,411 & 170,686 &  79,318 &  74,436 \\
 Other Paid          & 27,363 &  48,607 & 101,909 &  47,357 &  44,442 \\
 Unpaid Home-Based   &  2,655 &   4,715 &   9,886 &   4,594 &   4,311 \\
@@ -138,9 +138,9 @@ hours for each child, which come from
 \toprule
 & \textbf{KY} & \textbf{NJ} & \textbf{NY} & \textbf{NYC} & \textbf{VA} \\
 \midrule
-Center-Based        & 63.3 & 196.2 & 283.6 & 145.5 & 147.0 \\
+Center-Based        & 63.3 & 196.2 & 283.6 & 145.5 & 145.9 \\
 Unpaid Center-Based & 62.9 &  81.6 & 147.6 &  65.7 &  68.8 \\
-Paid Home-Based     &  9.1 &   3.8 & 185.0 &  74.2 &   9.1 \\
+Paid Home-Based     &  9.1 &   3.8 & 185.0 &  74.2 &  10.3 \\
 Other Unpaid        & 88.4 & 157.1 & 329.3 & 153.0 & 143.6 \\
 Other Paid          & 42.5 &  75.5 & 158.4 &  73.6 &  69.1 \\
 Unpaid Home-Based   &  5.6 &  10.0 &  21.0 &   9.7 &   9.1 \\
@@ -277,13 +277,17 @@ differently.
 \item The Virginia Department of Social Services (VDSS) writes the age range
       as text in
       \href{https://legacy.dss.virginia.gov/facility/search/cc2.cgi}{its
-      register}, so the build parses it into
-      months, drops any provider starting at age 5 or later, and scales a center
-      reaching past age 6 by 0.60. That scale is measured inside the register,
-      comparing centers with the same lower age bound whose span ends below age
-      six against those running to nearly thirteen. The three comparisons give
-      0.597, 0.607 and 0.408. Homes take no scale at all, because VA caps a
-      family day home at twelve children whatever ages it serves.
+      register}, so the build parses it into months, drops any provider
+      starting at age 5 or later, and scales a center reaching past age 6 by
+      0.60. VDSS appends a contact block to that field, and the build strips it
+      before parsing: the appended phone number carries a hyphen, and an
+      unstripped string makes the upper bound unreadable. Section 4.2 gives what
+      that cost when it was missed. With the field read correctly, a span ending
+      below age six holds 0.527 of one running to nearly thirteen in Child Day
+      Centers and 0.604 in Religious Exempt centers, pooling to 0.540, so 0.60
+      is the conservative end of the measured range. Homes take no scale at all,
+      because VA caps a family day home at twelve children whatever ages it
+      serves.
 \end{itemize}
 
 \subsubsection*{3.2 Move the register back to 2019}
@@ -355,7 +359,7 @@ NY  & Centers, city  &  2,310 & 141,300 & 127,580 \\
 NY  & Homes          & 11,918 & 117,401 &  93,381 \\
 NYC & Centers        &  2,310 & 141,300 & 127,580 \\
 NYC & Homes          &  4,580 &  46,057 &  36,634 \\
-VA  & Centers        &  3,186 & 207,835 & 187,654 \\
+VA  & Centers        &  3,186 & 188,600 & 170,287 \\
 VA  & Homes          &  1,935 &  12,633 &   7,604 \\
 \bottomrule
 \end{tabular}
@@ -457,7 +461,7 @@ KY  & 1.58 &  86,082 &  75,848 & 47\% \\
 NJ  & 1.04 & 175,212 & 134,734 & 44\% \\
 NY  & 1.03 & 367,348 & 282,481 & 44\% \\
 NYC & 1.05 & 170,707 & 131,269 & 44\% \\
-VA  & 0.62 & 139,811 & 123,189 & 47\% \\
+VA  & 0.71 & 139,811 & 123,189 & 47\% \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -474,9 +478,9 @@ follows.
       with one independent national survey.
       That agreement is the strongest evidence here that the conversion in step
       3 is sound.
-\item VA falls by a third. The VDSS register is the most complete of the four,
-      listing unlicensed and voluntarily registered family homes that no other
-      state here records, and it also borrows the national fill rate. Both push its
+\item VA falls by 29 percent. The VDSS register is the most complete of the
+      four, listing unlicensed and voluntarily registered family homes that no
+      other state here records, and it also borrows the national fill rate. Both push its
       count of formal care up, so the correction pushes it back down.
 \item KY rises by 58 percent, and this is the informative case. KY is the only state
       that measured how full its own centers are, and the answer was 57 percent
@@ -558,7 +562,78 @@ So the rate keeps its full sampling error, and the error is reported instead of
 being traded for a bias that nothing downstream could recover. The repository
 holds all three survey years, so anyone can repeat the test.
 
-\subsection*{4.2 Why the borrowed fill rates are too high}
+\subsection*{4.2 A parse defect in the Virginia register, and what it cost}
+
+VDSS writes the age range and a contact block into one field:
+
+\begin{quote}
+\small\texttt{1 month - 12 years 11 months VDSS Contact:}\\
+\small\texttt{Tara K Martin: (804) 588-2312}
+\end{quote}
+
+The build reads the upper bound as the text after the last hyphen. In a string
+like that one, the last hyphen sits inside the telephone number, so the upper
+bound became \texttt{2312}, which carries neither ``year'' nor ``month'' and
+parsed to zero months.
+
+A provider whose upper bound reads zero looks like a provider that serves no
+school-age children, so the build kept 100 percent of its capacity. The rows
+affected mostly run from one month to twelve years and eleven months, which is
+the most mixed span the register holds.
+
+\begin{center}
+\begin{tabular}{L{7.0cm}r}
+\toprule
+& \textbf{Affected} \\
+\midrule
+Rows                                       & 1,055 \\
+Licensed places                            & 78,486 \\
+Share of the VDSS register                 & 21.2\% \\
+Religious Exempt Child Day Centers         & 861 \\
+Voluntarily registered family day homes    & 173 \\
+Certified pre-schools                      & 21 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Stripping the contact block before parsing resolves every one of them, and it
+changes Virginia alone:
+
+\begin{center}
+\begin{tabular}{L{6.0cm}rr}
+\toprule
+& \textbf{Before} & \textbf{After} \\
+\midrule
+Mixed-span centers scaled   &   2,965 &   3,591 \\
+Center capacity below age 5 & 207,835 & 188,600 \\
+Center children             & 187,654 & 170,287 \\
+Calibration factor          &    0.62 &    0.71 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Two things follow from this, and both matter more than the numbers.
+
+The defect was invisible because the calibration hid it. Step 5 forces
+Virginia's formal care to the regional share whatever the register says, so the
+extra 19,235 places were absorbed into a more extreme scale factor rather than
+into an obviously wrong total. What looked like Virginia having an unusually
+complete register was partly a parse failure. The register is still the most
+complete of the four, but less of the gap is real than the earlier figure
+implied.
+
+The scale itself survived the fix. The 0.60 share was first measured on the
+uncleaned strings and happened to land in the right place. Measured on the
+cleaned field it is 0.527 for Child Day Centers and 0.604 for Religious Exempt
+centers, pooling to 0.540, so 0.60 remains defensible as the conservative end.
+The value did not change. What changed is that it now rests on a field the build
+reads correctly.
+
+The build now stops if any Virginia age range parses to an upper bound of zero
+months, so the same failure cannot return silently if VDSS changes the field
+again.
+
+\subsection*{4.3 Why the borrowed fill rates are too high}
 
 Two states have published their own figures, and both point the same way.
 
@@ -575,7 +650,7 @@ the fill rate already makes. What both establish is the direction and rough size
 of the error: licensed capacity overstates real supply by a quarter to a third,
 and the national fill rate does not remove enough of it.
 
-\subsection*{4.3 Sources, by publishing agency}
+\subsection*{4.4 Sources, by publishing agency}
 
 \begin{description}[style=nextline, leftmargin=0pt, itemsep=0.6em]
 \raggedright

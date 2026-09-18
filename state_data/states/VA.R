@@ -41,9 +41,27 @@ VA_TYPE_SETTING <- c(
 VA_SCHOOL_AGE_MONTHS <- 60   # span starting here or later is school-age only
 VA_UNDER_SIX_MONTHS  <- 72   # span reaching past here is mixed
 
-# Under-5 share of a mixed-span provider's capacity. Homes keep all of it --
-# Virginia caps a family day home at 12 children of mixed ages, so the span
-# says little about the age mix.
+# Under-5 share of a mixed-span provider's capacity, measured in-file: mean
+# capacity of a span ending under six against one running to nearly thirteen.
+#
+# RE-MEASURED 2026-09-18, after va_clean_ages() fixed the parse. Cleaned:
+#
+#   Child Day Center                   59.8 (n=372) vs 113.4 (n=2218) -> 0.527
+#   Religious Exempt Child Day Center  63.8 (n=330) vs 105.6 (n= 531) -> 0.604
+#   pooled, all centre types                                          -> 0.540
+#
+# Short Term, Local Government Approved, Certified Pre-School too thin to
+# measure -- they take the pooled figure like everything else.
+#
+# 0.60 KEPT. It sits inside the measured range and above the pooled 0.540, so
+# it is the conservative end. The earlier derivation reached the same value on
+# Child Day Centre alone (0.597 / 0.607 / 0.408 by lower bound) but on the
+# UNCLEANED strings, so agreement was luck: the same 0.60 now rests on a parse
+# that reads every row.
+#
+# Homes keep all of it -- Virginia caps a family day home at 12 children
+# whatever ages it serves, so the span says little about the age mix. Measured:
+# 1.007 and 0.951 by lower bound.
 VA_U5_SHARE_CENTER_MIXED <- 0.60
 VA_U5_SHARE_HOME_MIXED   <- 1.00
 
@@ -57,6 +75,32 @@ VA_EARLY_HEAD_START <- 2507    # published; cross-checks against ACF FY2019
 
 
 
+va_clean_ages <- function(x) {
+
+  #----------------------------------------------------------------------------
+  # Strips contact block VDSS appends to age range:
+  #   '1 month - 12 years 11 months VDSS Contact: Tara K Martin: (804) 588-2312'
+  #
+  # MUST RUN BEFORE va_months(). Upper bound parses as text after the LAST
+  # hyphen, and phone number carries one -- so an uncleaned string yields a
+  # tail w/ no 'year' or 'month', upper bound 0 months, row reads as NOT mixed
+  # and keeps 100% of capacity incl. school age.
+  #
+  # 1,055 rows, 78,486 places, 21.2% of register. 861 Religious Exempt centres,
+  # 173 voluntarily registered homes, 21 certified pre-schools. Most span
+  # '1 month - 12 years 11 months' -- squarely mixed, silently unscaled.
+  #
+  # Params:
+  #   - x (chr vec)
+  #
+  # Returns: (chr vec) age range alone
+  #----------------------------------------------------------------------------
+
+  trimws(sub(' *VDSS Contact:.*$', '', x))
+}
+
+
+
 va_months <- function(x) {
 
   #----------------------------------------------------------------------------
@@ -64,7 +108,7 @@ va_months <- function(x) {
   # both ends. Unparseable stays NA and the row keeps full capacity.
   #
   # Params:
-  #   - x (chr vec)
+  #   - x (chr vec): cleaned by va_clean_ages() first
   #
   # Returns: (num vec) months
   #----------------------------------------------------------------------------
@@ -101,9 +145,18 @@ va_assemble_providers <- function(spec) {
          '. The register added a type -- map it to CENTER or HOME.')
   }
 
-  lo      <- va_months(sub(' *-.*$', '', d$ages))
-  hi      <- va_months(sub('^.*- *', '', d$ages))
+  ages    <- va_clean_ages(d$ages)
+  lo      <- va_months(sub(' *-.*$', '', ages))
+  hi      <- va_months(sub('^.*- *', '', ages))
   setting <- unname(VA_TYPE_SETTING[d$facility_type])
+
+  # Tripwire: an upper bound of 0 months means the string did not parse. Before
+  # va_clean_ages() 1,055 rows landed here and silently kept school-age capacity.
+  n_zero <- sum(!is.na(hi) & hi == 0)
+  if (n_zero > 0) {
+    stop('VA: ', n_zero, ' age ranges parse to an upper bound of 0 months. ',
+         'Register changed the field. Check va_clean_ages().')
+  }
 
   school_only <- !is.na(lo) & lo >= VA_SCHOOL_AGE_MONTHS
   mixed       <- !is.na(hi) & hi >= VA_UNDER_SIX_MONTHS & !school_only
