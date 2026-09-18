@@ -11,3 +11,6 @@ config/supply/
 cache/price_models/price_qrf_models.rds
 slurm/scratch/
 slurm/logs/
+
+# state_data local config
+state_data/config_local.yaml

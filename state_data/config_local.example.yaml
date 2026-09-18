@@ -1,0 +1,20 @@
+# Copy to state_data/config_local.yaml and set paths for this machine.
+# config_local.yaml is git-ignored -- machine-specific paths never get committed.
+#
+# The defaults below are relative to the repository root, and the raw files they
+# point at are committed, so a fresh clone builds without downloading anything.
+# Point them elsewhere if you keep sources outside the repo.
+#
+# The project repeats one shape at both levels:
+#
+#   <root>/raw                      sources used by every state
+#   <root>/by-state/<ST>/raw  out   that state's own sources and output
+#
+paths:
+  # Holds one folder per state, each with raw/ and out/.
+  by_state: 'state_data/by-state'
+
+  # Sources used across all 51 -- PEP, NDCP, NONEMP, HSSL, CCD, NSCH. These are
+  # national files cut to the six states in scope and to the columns the build
+  # reads; see state_data/SOURCES.csv for where each came from.
+  raw: 'state_data/raw'
