@@ -82,7 +82,7 @@ KY  &  81,326 &  80,604 & 161,930 & 50\% \\
 NJ  & 173,225 & 136,721 & 309,946 & 56\% \\
 NY  & 270,982 & 378,847 & 649,829 & 42\% \\
 NYC & 132,065 & 169,911 & 301,976 & 44\% \\
-VA  & 134,434 & 128,566 & 263,000 & 51\% \\
+VA  & 134,459 & 128,541 & 263,000 & 51\% \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -98,7 +98,7 @@ KY  &  4,756 &  75,848 \\
 NJ  &  1,987 & 134,734 \\
 NY  & 96,366 & 282,481 \\
 NYC & 38,642 & 131,269 \\
-VA  &  5,377 & 123,189 \\
+VA  &  5,352 & 123,189 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -120,9 +120,9 @@ are not weighted survey figures.
 \toprule
 & \textbf{KY} & \textbf{NJ} & \textbf{NY} & \textbf{NYC} & \textbf{VA} \\
 \midrule
-Center-Based        & 37,550 & 116,402 & 168,235 &  86,337 &  86,558 \\
+Center-Based        & 37,550 & 116,402 & 168,235 &  86,337 &  86,583 \\
 Unpaid Center-Based & 43,776 &  56,823 & 102,747 &  45,728 &  47,876 \\
-Paid Home-Based     &  4,756 &   1,987 &  96,366 &  38,642 &   5,377 \\
+Paid Home-Based     &  4,756 &   1,987 &  96,366 &  38,642 &   5,352 \\
 Other Unpaid        & 45,830 &  81,411 & 170,686 &  79,318 &  74,436 \\
 Other Paid          & 27,363 &  48,607 & 101,909 &  47,357 &  44,442 \\
 Unpaid Home-Based   &  2,655 &   4,715 &   9,886 &   4,594 &   4,311 \\
@@ -143,7 +143,7 @@ Sub-step 6.3 gives the hours for each child, which come from
 \toprule
 & \textbf{KY} & \textbf{NJ} & \textbf{NY} & \textbf{NYC} & \textbf{VA} \\
 \midrule
-Center-Based        & 63.3 & 196.2 & 283.6 & 145.5 & 145.9 \\
+Center-Based        & 63.3 & 196.2 & 283.6 & 145.5 & 146.0 \\
 Unpaid Center-Based & 62.9 &  81.6 & 147.6 &  65.7 &  68.8 \\
 Paid Home-Based     &  9.1 &   3.8 & 185.0 &  74.2 &  10.3 \\
 Other Unpaid        & 88.4 & 157.1 & 329.3 & 153.0 & 143.6 \\
@@ -351,11 +351,15 @@ year.
       city separately from the rest of the state. Group family day care scales
       to 0.84 in the city, and city centers scale to 1.00, since the city
       register held almost the same capacity in 2019 as it does now.
-\item VA scales by one statewide factor of 0.90. The build computes it from
+\item VA scales by one statewide factor of 0.912. The build computes it from
       VDSS's
       \href{https://data.virginia.gov/dataset/child-care-data-matrix-virginia-s-estimated-child-care-capacity-demand-june-2020}{Child
       Care Data Matrix} for June 2020, as that report's child care slots divided
-      by the current VDSS register's capacity.
+      by the current register's capacity. The denominator is cut to the six
+      approval routes the 2020 column names in its own header, so that it counts
+      the same universe as the numerator. Dividing by all ten routes put 4,597
+      places into the denominator that the 2020 figure never counted, and gave
+      0.901 instead.
 \item KY and NJ need no correction, because their registers already sit at
       the base year. The Child Care Aware republication is a September 2018
       snapshot, and the DCF register is frozen at May 2019.
@@ -405,8 +409,8 @@ NY  & Centers, city  &  2,310 & 141,300 & 127,580 \\
 NY  & Homes          & 11,918 & 117,401 &  93,381 \\
 NYC & Centers        &  2,310 & 141,300 & 127,580 \\
 NYC & Homes          &  4,580 &  46,057 &  36,634 \\
-VA  & Centers        &  3,186 & 188,600 & 170,287 \\
-VA  & Homes          &  1,935 &  12,633 &   7,604 \\
+VA  & Centers        &  3,186 & 190,975 & 172,432 \\
+VA  & Homes          &  1,935 &  12,792 &   7,700 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -468,7 +472,9 @@ Certified pre-schools                      & 21 \\
 \end{table}
 
 Stripping the contact block before parsing resolves every one of them, and it
-changes Virginia alone.
+changes Virginia alone. The table below isolates that one change; a later
+correction to the rebase denominator, described in sub-step 3.2, moved the
+factor again to 0.695.
 
 \begin{table}[H]
 \centering
@@ -603,7 +609,7 @@ KY  & 1.58 &  86,082 &  75,848 & 47\% \\
 NJ  & 1.04 & 175,212 & 134,734 & 44\% \\
 NY  & 1.03 & 367,348 & 282,481 & 44\% \\
 NYC & 1.05 & 170,707 & 131,269 & 44\% \\
-VA  & 0.71 & 139,811 & 123,189 & 47\% \\
+VA  & 0.69 & 139,811 & 123,189 & 47\% \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -620,7 +626,7 @@ follows.
       with one independent national survey.
       That agreement is the strongest evidence here that the conversion in step
       3 is sound.
-\item VA falls by 29 percent. The VDSS register is the most complete of the
+\item VA falls by 30 percent. The VDSS register is the most complete of the
       four, listing unlicensed and voluntarily registered family homes that no
       other state here records, and it also borrows the national fill rate. Both push its
       count of formal care up, so the correction pushes it back down.

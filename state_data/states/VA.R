@@ -38,6 +38,19 @@ VA_TYPE_SETTING <- c(
   'System Approved FDH'                                   = 'HOME',
   'Voluntary Registration Registration Duration: Two Year' = 'HOME')
 
+# The six approval routes VDSS's June 2020 capacity column covers, spelled as
+# the current register spells them. Header abbreviations: CDC child day centre,
+# FDH family day home, VR voluntary registration, RE religious exempt, CCS
+# child care system, LOH local ordinance home. Used to match the rebase
+# denominator to its numerator.
+VA_TYPES_IN_2020_MATRIX <- c(
+  'Child Day Center',
+  'Family Day Home',
+  'Voluntary Registration Registration Duration: Two Year',
+  'Religious Exempt Child Day Center',
+  'System Approved FDH',
+  'Local Ordinance Approved FDH')
+
 VA_SCHOOL_AGE_MONTHS <- 60   # span starting here or later is school-age only
 VA_UNDER_SIX_MONTHS  <- 72   # span reaching past here is mixed
 
@@ -170,6 +183,13 @@ va_assemble_providers <- function(spec) {
   # Rebase to June 2020: VDSS's own published child care slots over the current
   # register's capacity. One statewide factor -- county factors are what the
   # old county build needed, and nothing here is below the state.
+  #
+  # DENOMINATOR MATCHES THE NUMERATOR'S UNIVERSE. The 2020 column names it in
+  # its own header -- 'CC Slots (age range birth to 12 yrs) (CDC, FDH, VR, RE,
+  # CCS, LOH)' -- so the current register is cut to those six routes before
+  # dividing. Dividing by all ten put 4,597 places in the denominator that the
+  # 2020 figure never counted (3,922 Short Term centre, 675 Certified
+  # Pre-School), understating the factor: 0.9006 against 0.9120 like for like.
   m20 <- read_chr(geo_raw_path('VA',
            'VA_VDSS20__locality_capacity_and_program_slots__2020-06.csv'))
   cc <- grep('^CC Slots', names(m20), value = TRUE)
@@ -177,8 +197,12 @@ va_assemble_providers <- function(spec) {
     stop('VA: expected one "CC Slots" column in the 2020 matrix, found ',
          length(cc))
   }
-  f <- sum(num(m20[[cc]]), na.rm = TRUE) / sum(num(d$capacity), na.rm = TRUE)
-  cat(sprintf('    capacity rebased to Jun 2020, statewide x%.4f\n', f))
+  in_2020 <- d$facility_type %in% VA_TYPES_IN_2020_MATRIX
+  f <- sum(num(m20[[cc]]), na.rm = TRUE) /
+         sum(num(d$capacity)[in_2020], na.rm = TRUE)
+  cat(sprintf('    capacity rebased to Jun 2020, statewide x%.4f (%d of %d ',
+              f, sum(in_2020), nrow(d)))
+  cat('facilities match the 2020 universe)\n')
 
   tibble::tibble(setting = setting, school_only = school_only,
                  cap_u5  = num(d$capacity) * share * f) %>%
