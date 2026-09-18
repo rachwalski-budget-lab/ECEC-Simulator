@@ -9,8 +9,9 @@ Rscript state_data/00_main.R --all           # build all five
 Rscript state_data/00_main.R --all --check   # build and run the invariants
 ```
 
-**[METHOD.md](METHOD.md) is the document to read.** It says what every number
-means, where it comes from, and how solid it is. This file is just the map.
+**[docs/SUMMARY_method.pdf](docs/SUMMARY_method.pdf) is the document to read.**
+It says what every number means, where it comes from, and how solid it is. Its
+source is beside it as a .tex. This file is just the map.
 
 ## What is built
 
@@ -35,7 +36,8 @@ removed about 3,000 lines.
 00_main.R                    the method, and the CLI. One file.
 states/<GEO>.R               one per geography -- a spec plus the few
                                constants that geography measured for itself
-METHOD.md                    how the build works and what it rests on
+docs/SUMMARY_method.tex      how the build works and what it rests on,
+                               and the .pdf built from it
 SOURCES.md                   every source, where it came from, its traps
 raw/                         sources used by every geography, held once
 by-state/<GEO>/raw/          that geography's own sources
@@ -44,10 +46,6 @@ out/<GEO>.csv                the output
 config_local.example.yaml    copy to config_local.yaml (git-ignored)
 ```
 
-`by-state/GA/` and `by-state/NM/` hold raw sources for two states that are not
-currently built. The files stay: they are the evidence behind numbers quoted in
-`METHOD.md` and the earlier write-ups, and re-finding them costs more than the
-disk does.
 
 ## Why this exists at all
 

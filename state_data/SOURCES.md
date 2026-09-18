@@ -421,3 +421,19 @@ what is on disk.
 Each geography's own sources are declared in its `states/<GEO>.R`, next to the
 code that reads them, and the constants that geography measured for itself are
 documented there with their derivation.
+
+## Removed when the build moved to the state level
+
+These were read by the county build and are read by nothing now. They are
+recorded here so they can be fetched again rather than re-found.
+
+| File | Why it went | Where it came from |
+|---|---|---|
+| `US_NDCP__center_prices_ages_0_4_by_county_extract__2008-2022.csv` | the Low/High price split was dropped; a state publishes one price | DOL Women's Bureau, National Database of Childcare Prices |
+| `US_NDCP__national_median_hourly_center_price__2016.csv` | same | derived from the workbook above |
+| `US_NONEMP__nonemployer_childcare_businesses_by_county__2019.csv` | never used. Converting a business count to a child count needs a children-per-provider figure no state here publishes | Census API, `2019/nonemp`, NAICS2017 6244 |
+| `US_CCD__public_school_county_geocode_crosswalk__2018-19.csv` | school to county only, no addresses, so it cannot support an address match | NCES EDGE |
+| `by-state/GA/`, `by-state/NM/` | neither state is built | see the state files in the county build's history |
+
+The two NSCH waves either side of 2019 are NOT in this table. They stay, so the
+pooling test that rejected them can be repeated.
