@@ -14,25 +14,41 @@
 \begin{document}
 \maketitle
 
-The simulator needs one small file per geography: six rows, one per care type,
-one number each, the annual hours of child care children under five use. This
-memo says where that number comes from.
+\section{Purpose}
 
-Everything happens at the state level. County data enters once, in the
-population step, and it enters as a sum. Nothing joins on county.
+\begin{enumerate}
+\setlength{\itemsep}{0.35em}
+\item The simulator reads one file for each geography.
+\item The file has six rows. Each row is one care type.
+\item Each row holds one number. The number is the annual hours of child care.
+\item This memo gives the source of that number.
+\end{enumerate}
 
-\section{Why this is not a survey lookup}
+Two rules apply to the whole build.
 
-The simulator calibrates each state against the mix of child care its families
-actually use. NSECE, the survey that measures that mix, does not record which
-state a family is in. It publishes Census region and nothing finer.
+\begin{itemize}
+\setlength{\itemsep}{0.35em}
+\item \textbf{The build works at the state level.} It reads county data one
+      time, in step 1, and it adds the counties together. No later step uses a
+      county.
+\item \textbf{The build uses a state measurement first.} It uses a national
+      figure only where the state publishes none.
+\end{itemize}
 
-So I rebuild the mix from each state's own administrative records, and I use the
-survey only for the things no state records can see.
+\subsection*{Why the build exists}
+
+\begin{itemize}
+\setlength{\itemsep}{0.35em}
+\item The simulator must know the mix of child care in each state.
+\item NSECE measures that mix. NSECE does not record the state of a family.
+\item NSECE reports the Census region only.
+\item Therefore I build the mix from the administrative records of each state.
+\item I use NSECE only for the care that no administrative record shows.
+\end{itemize}
 
 \section{Results}
 
-The build measures two things. Everything else is a subdivision of them.
+The build measures two quantities. All other rows divide these two.
 
 \begin{center}
 \begin{tabular}{L{3.2cm}rrrr}
@@ -48,12 +64,13 @@ Virginia      & 135,068 & 127,932 & 263,000 & 51\% \\
 \end{tabular}
 \end{center}
 
-Care that is not center-based is one part counted and one part left over:
+Care that is not center-based has two parts. The build counts the first part.
+The build calculates the second part as a remainder.
 
 \begin{center}
 \begin{tabular}{L{3.2cm}rr}
 \toprule
-& \textbf{Licensed home care} & \textbf{Informal, unrecorded} \\
+& \textbf{Licensed home care} & \textbf{Informal care} \\
 \midrule
 Kentucky      &  4,756 &  75,848 \\
 New Jersey    &  1,987 & 134,734 \\
@@ -64,12 +81,18 @@ Virginia      &  4,743 & 123,189 \\
 \end{tabular}
 \end{center}
 
-New York's licensed home care is twenty times Kentucky's or Virginia's. That is
-real rather than an artefact: New York registers home care from three children
-up, so care that leaves no trace elsewhere sits inside its register.
+\begin{itemize}
+\setlength{\itemsep}{0.35em}
+\item New York holds 20 times more licensed home care than Kentucky or
+      Virginia.
+\item This difference is correct. New York registers a home provider that keeps
+      three children or more.
+\item Other states do not register a provider that small. The care exists there,
+      but no register records it.
+\end{itemize}
 
-Children, by care type. These are counts of children, not records and not
-weighted survey figures:
+All figures below are counts of children. They are not record counts. They are
+not weighted survey figures.
 
 \begin{center}
 \begin{tabular}{L{4.0cm}rrrrr}
@@ -89,7 +112,7 @@ Unpaid Home-Based   &  2,655 &   4,715 &   9,886 &   4,594 &   4,311 \\
 \end{tabular}
 \end{center}
 
-Annual hours, in millions. This is the output file:
+The output file holds annual hours. This table shows them in millions.
 
 \begin{center}
 \begin{tabular}{L{4.0cm}rrrrr}
@@ -106,17 +129,27 @@ Unpaid Home-Based   &  5.6 &  10.0 &  21.0 &   9.7 &   9.1 \\
 \end{tabular}
 \end{center}
 
-New York City is both inside New York and a build of its own. The two overlap
-deliberately, and they do not match: each is calibrated against its own
-non-parental total, so the five boroughs come out differently depending on which
-build produced them. Read one or the other, not both.
+New York City has two positions in this table.
+
+\begin{itemize}
+\setlength{\itemsep}{0.35em}
+\item The city is part of New York. The New York row includes it.
+\item The city is also a separate build.
+\item The two builds do not agree. Each build uses its own control total from
+      step 2.
+\item Use one build or the other build. Do not add them together.
+\end{itemize}
 
 \section{The build}
 
-\subsection*{1. Count the children}
+\subsection*{Step 1. Count the children}
 
-Census population estimates, vintage 2019, children aged 0 to 4, summed from
-counties to the state.
+\begin{enumerate}
+\setlength{\itemsep}{0.35em}
+\item Read the Census population estimates for 2019.
+\item Keep children of age 0 to 4.
+\item Add the counties together for each geography.
+\end{enumerate}
 
 \begin{center}
 \begin{tabular}{L{3.2cm}r}
@@ -132,19 +165,28 @@ Virginia      &   505,477 \\
 \end{tabular}
 \end{center}
 
-I use ages 0 to 4 because the simulator does. Its ACS processing filters
-\texttt{age < 5} in seven places, and the demand file has to describe the same
-children the simulator is calibrating against. A 0--5 universe was built and
-discarded: it raises every total by 15 to 23 percent, it needs a second
-population source, and Census publishes no single-year-of-age county estimate,
-so New York City could only be estimated rather than counted.
+The build uses ages 0 to 4 for three reasons.
 
-New York City is 47 percent of the state's young children.
+\begin{itemize}
+\setlength{\itemsep}{0.35em}
+\item The simulator uses the same ages. Its code keeps children below age 5 in
+      seven places.
+\item A universe of ages 0 to 5 increases each total by 15 to 23 percent.
+\item Census publishes no county estimate for age 5 alone. The build can count
+      a state at age 5, but it can only estimate New York City.
+\end{itemize}
 
-\subsection*{2. How many are in someone else's care}
+New York City holds 47 percent of the children in New York.
 
-I multiply by a rate from a household survey. NSCH 2019 asks whether the child
-was in any non-parental care in the past week, and it records the state.
+\subsection*{Step 2. Find the children in non-parental care}
+
+\begin{enumerate}
+\setlength{\itemsep}{0.35em}
+\item Read the NSCH household survey for 2019.
+\item Keep the children of age 0 to 4. Weight each child by the child weight.
+\item Calculate the share of children in non-parental care.
+\item Multiply the children from step 1 by that share.
+\end{enumerate}
 
 \begin{center}
 \begin{tabular}{L{3.2cm}rrrr}
@@ -160,78 +202,80 @@ Virginia      &   505,477 & 52.0\% & 263,000 & 121 \\
 \end{tabular}
 \end{center}
 
-That product is the control total. Every later count is a share of it.
-
-The total is always 2019, because both inputs are 2019. That is what lets me use
-a provider register published in 2026 without ageing it backward: the register
-decides the mix, never the level.
-
-New York City takes the state's rate, because NSCH publishes no sub-state
-geography. Everything that distinguishes the city has to come from its
-registers, and it does.
-
-This rate is the softest number in the build. About 120 families per state,
-which is roughly a seven point standard error on a figure that multiplies the
-entire non-parental total. Section 5 says why I did not pool more waves to fix
-it.
-
-\subsection*{3. Turn provider registers into children}
-
-Every state licenses child care providers and publishes the register. The
-register gives capacity; I need children. Three things have to happen, and each
-state needs them done differently because the registers differ.
-
-\textbf{Remove the school-age capacity.} Every register mixes it in.
+The product is the \textbf{control total}. Every later count is a share of it.
 
 \begin{itemize}
-\setlength{\itemsep}{0.2em}
-\item \textbf{Kentucky} does not say which providers are centers and which are
-homes. I split on the state's own rule: a licensed home is capped at 12
-children, so capacity of 12 or less is a home. That gives 1,609 centers and 335
-homes. Providers serving school-age children only are dropped. Mixed age bands
-scale by ratios measured inside the file itself, 0.487 to 0.827 depending on the
-band.
-\item \textbf{New Jersey} publishes an age range per center. I drop the 1,035
-centers serving only ages 6 to 13, and scale mixed ranges by 0.820.
-\item \textbf{New York} is the clean case. It publishes capacity by age, so
-infant plus toddler plus preschool is the under-five figure exactly. Homes
-report one lump, but school-age capacity is published separately and subtracts.
-\item \textbf{Virginia} writes the age range as text. I parse it to months and
-drop anything starting at age five or later. Centers reaching past six scale by
-0.60.
+\setlength{\itemsep}{0.35em}
+\item \textbf{The control total is always a 2019 figure.} Both inputs are 2019
+      data.
+\item This is why the build can use a register from 2026. The register sets the
+      mix of care. The register never sets the total.
+\item \textbf{New York City uses the rate of New York.} NSCH publishes no rate
+      below the state. The registers supply all city differences.
+\item \textbf{This rate is the weakest number in the build.} Each state has
+      about 120 families. The standard error is about seven percentage points.
+      Section 4 explains why the build does not pool more survey years.
 \end{itemize}
 
-\textbf{Bring the register back to 2019.} Two of them are 2026 exports.
+\subsection*{Step 3. Convert the registers into children}
+
+Each state licenses child care providers. Each state publishes a register. The
+register gives capacity. The build needs children. Three operations convert one
+into the other.
+
+\textbf{Operation 1. Remove the school-age capacity.} Every register includes
+it. Each register hides it differently.
 
 \begin{itemize}
-\setlength{\itemsep}{0.2em}
-\item \textbf{New York} scales by provider type against the state's own
-2015--2025 capacity series. Family homes have closed in large numbers: group
-family day care scales to 0.86 of its current size statewide and 0.84 in the
-city. Centers barely moved, so one blanket factor would distort the mix.
-\item \textbf{Virginia} scales by one statewide factor, 0.90, against its June
-2020 capacity matrix.
-\item \textbf{Kentucky and New Jersey} need nothing. Kentucky's register is a
-September 2018 snapshot, ten months before the base year and the best vintage
-here. New Jersey's is frozen at May 2019.
+\setlength{\itemsep}{0.35em}
+\item \textbf{Kentucky} does not mark a provider as a center or a home. The
+      build applies the state rule: a licensed home keeps 12 children or fewer.
+      This gives 1,609 centers and 335 homes. The build drops a provider that
+      serves school-age children only. The build scales a mixed age band by a
+      ratio between 0.487 and 0.827. It measures each ratio inside the register.
+\item \textbf{New Jersey} publishes an age range for each center. The build
+      drops the 1,035 centers that serve ages 6 to 13 only. It scales a mixed
+      range by 0.820.
+\item \textbf{New York} publishes capacity by age. Infant plus toddler plus
+      preschool gives the under-five capacity exactly. A home reports one total,
+      but the register publishes its school-age capacity. The build subtracts
+      it.
+\item \textbf{Virginia} publishes the age range as text. The build reads the
+      text and converts it to months. It drops a provider that starts at age 5
+      or later. It scales a center that serves past age 6 by 0.60.
 \end{itemize}
 
-\textbf{Turn capacity into children.} Capacity is the legal maximum. Real
-enrollment is lower.
+\textbf{Operation 2. Move the register back to 2019.} Two registers are 2026
+exports.
 
 \begin{itemize}
-\setlength{\itemsep}{0.2em}
-\item \textbf{Kentucky measured its own, and uses no fill rate at all.} Its 2019
-workforce study prints capacity and enrollment side by side: 42 children per
-center, 9 per home. This is the best way to do it, and it is why 1,609 centers
-yield only 67,578 children.
-\item \textbf{New Jersey measured its own too}, 67 percent full, from its 2021
-market rate survey.
-\item \textbf{New York and Virginia have published none}, so they borrow the
-national figures: centers 90 percent full, homes 60 percent. New York's homes
-take 80 percent instead, the fill rate without the age correction, because its
-register already removed school-age capacity and applying the correction again
-would remove it twice.
+\setlength{\itemsep}{0.35em}
+\item \textbf{New York} scales each provider type against the state capacity
+      series for 2015 to 2025. Group family day care scales to 0.86 statewide
+      and to 0.84 in the city. Centers did not change. One factor for all types
+      would make the mix incorrect.
+\item \textbf{Virginia} scales by one statewide factor of 0.90. The build
+      calculates it against the state capacity report for June 2020.
+\item \textbf{Kentucky and New Jersey} need no correction. The Kentucky register
+      is a snapshot from September 2018. The New Jersey register is a snapshot
+      from May 2019.
+\end{itemize}
+
+\textbf{Operation 3. Convert capacity into children.} Capacity is the legal
+maximum. The true enrollment is lower.
+
+\begin{itemize}
+\setlength{\itemsep}{0.35em}
+\item \textbf{Kentucky measured its own enrollment.} The build applies no fill
+      rate there. The 2019 workforce study prints capacity and enrollment
+      together: 42 children for each center and 9 for each home. This is the
+      preferred method. It is why 1,609 centers give only 67,578 children.
+\item \textbf{New Jersey measured its own fill rate.} Its centers are 67 percent
+      full. The figure comes from the market rate survey of 2021.
+\item \textbf{New York and Virginia publish no fill rate.} They use the national
+      figures: 90 percent for a center and 60 percent for a home.
+\item New York homes use 80 percent instead. Its register already removed the
+      school-age capacity. The 60 percent figure would remove it a second time.
 \end{itemize}
 
 \begin{center}
@@ -253,15 +297,21 @@ Virginia      & Homes          &  1,935 &  12,633 &   7,604 \\
 \end{tabular}
 \end{center}
 
-New York needs two registers, because it has two regulators. The state licenses
-no centers inside New York City; the city permits its own under Health Code
-Article 47. The state's row for the city is zero, and that is correct rather
-than a join failure. Neither register alone covers the state.
+New York needs two registers.
 
-\subsection*{4. Add the programs that count their own children}
+\begin{itemize}
+\setlength{\itemsep}{0.35em}
+\item New York has two regulators.
+\item The state licenses no center inside New York City.
+\item The city permits its own centers under Article 47 of the Health Code.
+\item The state register therefore shows zero centers in the city. This is
+      correct. It is not a failure of the build.
+\end{itemize}
 
-Head Start, Early Head Start and public pre-K publish actual enrollment, so no
-estimate is needed.
+\subsection*{Step 4. Add the programs that count their children}
+
+Head Start, Early Head Start and public pre-K publish their enrollment. The
+build uses the published count.
 
 \begin{center}
 \begin{tabular}{L{3.2cm}rrrr}
@@ -277,29 +327,42 @@ Virginia      & 33,790 & 11,579 &  2,507 &  47,876 \\
 \end{tabular}
 \end{center}
 
-These children come out of the licensed center count, not on top of it. A Head
-Start center usually holds a state licence, so its children already sit inside
-step 3's capacity, and adding them would count them twice.
+\begin{itemize}
+\setlength{\itemsep}{0.35em}
+\item \textbf{The build subtracts these children from the center count.} It does
+      not add them.
+\item A Head Start center usually holds a state licence. Step 3 therefore
+      counted its children already. An addition would count them two times.
+\item \textbf{A published count does not move in step 5.} The build treats it as
+      a census.
+\item \textbf{This row is an upper limit in each state.} Head Start and state
+      pre-K overlap. No source publishes the size of the overlap.
+\end{itemize}
 
-A published count is treated as a census and does not move in step 5.
+\subsection*{Step 5. Calibrate the total to the survey}
 
-This category is an upper bound in every state. I cannot measure how much Head
-Start overlaps state pre-K, and the published figures do not net it out.
+A register measures the relative distribution across care types correctly. A
+register measures the total incorrectly. It shows too many children in formal
+care.
 
-\subsection*{5. Scale the level to the survey}
+\begin{enumerate}
+\setlength{\itemsep}{0.35em}
+\item Take the share of non-parental care that is formal. NSECE gives this share
+      for each Census region. It is a little more than one half.
+\item Multiply that share by the control total from step 2. This gives the
+      target.
+\item Hold the program counts from step 4 constant.
+\item Scale all other counts by one factor until the formal total reaches the
+      target.
+\end{enumerate}
 
-Provider registers are good at shape and bad at level. They say which care types
-are common in a state; they overstate how many children are in formal care.
-
-So I scale each geography by one factor until formal care matches the share the
-survey finds, a little over half of all non-parental care. The program counts
-hold still. Everything else moves together, so the mix is untouched and only the
-level changes.
+All scaled counts move together. The relative distribution does not change. Only
+the total changes.
 
 \begin{center}
 \begin{tabular}{L{3.2cm}rrrr}
 \toprule
-& \textbf{Scaled by} & \textbf{Formal} & \textbf{Informal} & \textbf{Informal share} \\
+& \textbf{Scale factor} & \textbf{Formal} & \textbf{Informal} & \textbf{Informal share} \\
 \midrule
 Kentucky      & 1.58 &  86,082 &  75,848 & 47\% \\
 New Jersey    & 1.04 & 175,212 & 134,734 & 44\% \\
@@ -310,83 +373,109 @@ Virginia      & 0.62 & 139,811 & 123,189 & 47\% \\
 \end{tabular}
 \end{center}
 
-This table is the best diagnostic in the build.
+This table is the primary check on the build. Read it as follows.
 
-New Jersey, New York and the city barely move. Their raw register counts landed
-within two points of the survey before anything was done to them. Three separate
-state registers agreeing with an independent national survey is the strongest
-evidence here that the conversion in step 3 is sound.
+\begin{itemize}
+\setlength{\itemsep}{0.35em}
+\item \textbf{New Jersey, New York and the city change very little.} Their
+      register counts came within two percentage points of the survey before the
+      build changed anything. Three separate state registers agree with one
+      independent national survey. This is the strongest evidence that step 3 is
+      correct.
+\item \textbf{The build reduces Virginia by one third.} Its register is the most
+      complete of the four. It lists unlicensed and voluntarily registered
+      family homes. Other states do not record those providers. Virginia also
+      uses the borrowed national fill rate.
+\item \textbf{The build increases Kentucky by one half.} Kentucky is the only
+      state that measured how full its centers are. The measurement is 57
+      percent. New York and Virginia use 90 percent. The national figure is too
+      high by more than one half. Kentucky moves up and Virginia moves down,
+      which is the result that this difference predicts. The calibration
+      therefore corrects a measured error.
+\end{itemize}
 
-Virginia is cut by a third. Its register is the most inclusive of the four,
-listing unlicensed and voluntarily registered family homes that other states
-never record, and it borrows the national fill rate.
+\subsection*{Step 6. Complete the rows}
 
-Kentucky is raised by half, and that is the informative one. Kentucky is the
-only state that measured how full its own centers are: 57 percent, against the
-90 percent that New York and Virginia borrow. The borrowed figure is too high by
-more than half. Kentucky moving up and Virginia moving down is exactly what that
-gap predicts, so the scaling is correcting a bias two states have measured
-rather than absorbing an unexplained one.
+\textbf{The build uses no price split.}
 
-\subsection*{6. Finish the rows}
+\begin{itemize}
+\setlength{\itemsep}{0.35em}
+\item An earlier version divided center care into low-priced and high-priced.
+\item A state publishes one price. Each state therefore fell on one side of the
+      national boundary.
+\item A care type with no children then reads as unmeasured, not as absent.
+\item Center care is now one row. It holds 1,686 hours for each child each year.
+      This is the national mean across both price bands.
+\end{itemize}
 
-\textbf{There is no price split.} An earlier version divided center care into
-low-priced and high-priced. Nothing in the state data supports that division. A
-state publishes one price, so every state landed wholly on one side of the
-national line, and a care type with no children in it reads as unmeasured rather
-than as absent. Center care is now one row, at 1,686 hours per child per year,
-the national average across both price bands.
+\textbf{The build calculates the care that no register records.}
 
-\textbf{Fill in the care nobody records.} Three of the six types appear in no
-register anywhere: unpaid relatives, nannies, informal arrangements. Unpaid
-relative care is not a business and files no return. It is whatever is left of
-the control total after everything countable is subtracted, divided three ways
-on the national pattern. That remainder runs 44 to 47 percent of non-parental
-care here, against 47 percent nationally.
+\begin{itemize}
+\setlength{\itemsep}{0.35em}
+\item Three of the six types appear in no register: unpaid relatives, nannies
+      and informal arrangements.
+\item Unpaid relative care is not a business. It files no return.
+\item The build subtracts all counted care from the control total. The remainder
+      is this care.
+\item The build divides the remainder three ways on the national pattern.
+\item The remainder is 44 to 47 percent of non-parental care. The national
+      figure is 47 percent.
+\end{itemize}
 
-\textbf{Convert children to hours.} Each care type has a measured hours figure
-from the national survey: the child-weighted mean weekly hours in the child's
-primary arrangement, times 50 weeks. They run from about 1,440 hours a year for
-program center care to about 2,120 for unpaid home care, so the hours column is
-not proportional to the children column.
+\textbf{The build converts children into hours.}
 
-\section{What each number rests on}
+\begin{itemize}
+\setlength{\itemsep}{0.35em}
+\item Each care type has a measured hours figure from NSECE.
+\item The figure is the mean weekly hours of the primary arrangement, multiplied
+      by 50 weeks.
+\item The figures run from about 1,440 hours for program center care to about
+      2,120 hours for unpaid home care.
+\item The hours column is therefore not proportional to the children column.
+\end{itemize}
+
+\section{The source of each number}
 
 \begin{center}
-\begin{tabular}{L{4.4cm}L{4.4cm}L{4.4cm}}
+\begin{tabular}{L{4.0cm}L{4.2cm}L{5.0cm}}
 \toprule
-& \textbf{Where it comes from} & \textbf{How solid} \\
+& \textbf{Source} & \textbf{Reliability} \\
 \midrule
 Children 0--4 & Census, 2019 & Counted \\
 \addlinespace
-Share in non-parental care & Household survey, 2019, about 120 families per
-  state & Soft. Pooling was tested and rejected \\
+Share in non-parental care & Household survey, 2019, about 120 families for each
+  state & Weak. The build tested a pool of survey years and rejected it \\
 \addlinespace
-Provider capacity & State licensing register & Counted, but a legal maximum.
-  Virginia providers say they can serve 27 percent fewer children than they are
-  licensed for \\
+Provider capacity & State register & Counted, but it is a legal maximum.
+  Virginia providers report that they can serve 27 percent fewer children than
+  their licence permits \\
 \addlinespace
-How full providers are, KY and NJ & The state's own survey & Measured in state \\
+Fill rate, KY and NJ & The state's own survey & Measured in the state \\
 \addlinespace
-How full providers are, NY and VA & National survey & Borrowed. Two states' own
-  data say it is too high \\
+Fill rate, NY and VA & National survey & Borrowed. Two states report that it is
+  too high \\
 \addlinespace
-Program enrollment & Federal and state reporting & Counted \\
+Program enrollment & Federal and state reports & Counted \\
 \addlinespace
-Informal split, hours per child & National survey & Borrowed \\
+Informal split and hours & National survey & Borrowed \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-\subsection*{The non-parental share stays a single 2019 wave}
+\subsection*{Why the rate uses one survey year}
 
-Pooling survey waves would cut the sampling error by 40 to 47 percent. I tested
-it and rejected it, on the standard that every input matches the simulator's
-2019 base year.
+A pool of survey years reduces the sampling error by 40 to 47 percent. The build
+does not pool. Every input must match the 2019 base year of the simulator.
 
-Pooling 2018, 2019 and 2020 centers exactly on 2019, which is the one pool that
-passes the vintage test. It fails on content. NSCH 2020 was fielded through the
-pandemic and child care use collapsed:
+\begin{enumerate}
+\setlength{\itemsep}{0.35em}
+\item A pool of 2018, 2019 and 2020 centres exactly on 2019. This pool passes
+      the vintage test.
+\item This pool fails on content. The survey collected the 2020 data during the
+      pandemic. The use of child care fell.
+\item A pool of 2018 and 2019 centres on the middle of 2018. Every other input
+      is 2019.
+\end{enumerate}
 
 \begin{center}
 \begin{tabular}{L{3.2cm}rrr}
@@ -401,58 +490,63 @@ Virginia   & 61.7\% & 52.0\% & 46.7\% \\
 \end{tabular}
 \end{center}
 
-That is a real shock, not sampling noise, and pooling it in would push every
-state's level down by several points. Pooling 2018 and 2019 alone centers on
-mid-2018 while every other input is pinned to 2019.
+The fall in 2020 is a real change. It is not sampling noise. A pool would
+decrease each total by several percentage points. The rate therefore keeps its
+full sampling error. The repository holds both extra survey years, so another
+person can repeat this test.
 
-So the rate keeps its full sampling error. Both extra waves are held in the
-repository so the rejection is reproducible, not so the pool can be used.
+\subsection*{Why the borrowed fill rates are too high}
 
-\subsection*{The borrowed fill rates are too high, measurably}
+Two states published their own figures. Both point in the same direction.
 
-Two states have published their own figures and both point the same way.
+\begin{itemize}
+\setlength{\itemsep}{0.35em}
+\item \textbf{Kentucky} measured its centers at 57 percent full in 2019. New
+      York and Virginia use 90 percent.
+\item \textbf{Virginia} measured a related quantity in 2022. It asked 1,968
+      providers what they can serve, and compared the answer to their licence.
+      Centers reported 73 percent of their licensed capacity. Homes reported 91
+      percent. The sample holds 121,260 licensed places against 89,374 children.
+\end{itemize}
 
-Kentucky measured its centers at 57 percent full in 2019, against the national
-90 percent that New York and Virginia borrow.
+The build uses neither figure as a rate.
 
-Virginia measured something related in 2022: what providers say they can
-actually serve, against what they are licensed for. Centers came in at 73
-percent of authorized capacity and homes at 91 percent, across 1,968 providers.
-In that sample, 121,260 licensed slots against 89,374 children providers said
-they could take.
+\begin{itemize}
+\setlength{\itemsep}{0.35em}
+\item The Kentucky figure applies to Kentucky.
+\item The Virginia figure is from 2022. It measures capacity, not enrollment. It
+      would duplicate the correction that the fill rate already makes.
+\item Both figures show the direction and the size of the error. Licensed
+      capacity is too high by one quarter to one third. The national fill rate
+      does not remove enough of it.
+\end{itemize}
 
-Neither figure is used as a rate. Kentucky's applies to Kentucky. Virginia's is
-a 2022 survey and measures capacity rather than enrollment, so it would
-double-count against the fill rate. Both are evidence about direction and size,
-and they agree: licensed capacity overstates real supply by roughly a quarter to
-a third, and the national fill rate does not remove enough of it.
-
-\section{What this method does not do}
+\section{Limits}
 
 \begin{enumerate}
 \setlength{\itemsep}{0.4em}
-\item \textbf{It cannot see unpaid relative care}, the largest informal
-category. That number is a remainder, not a measurement, and no administrative
-source anywhere would fix it. Only a restricted-access survey geocode file
-would.
+\item \textbf{The build cannot see unpaid relative care.} This is the largest
+      informal category. The figure is a remainder, not a measurement. No
+      administrative source would correct it. Only a restricted survey file
+      would.
 
-\item \textbf{The mix carries the register's date.} The level is 2019 by
-construction, but how it divides across care types reflects whenever the state
-last published. Composition genuinely drifts, and a 2026 register understates
-family homes for 2019.
+\item \textbf{The mix carries the date of the register.} The total is 2019 by
+      construction. The division across care types comes from the last
+      publication of the state. The mix changes over time. A register from 2026
+      shows too few family homes for 2019.
 
-\item \textbf{Unpaid Center-Based is an upper bound} in every state, because
-Head Start and state pre-K overlap by an amount nobody publishes, and a program
-site may also hold a state licence.
+\item \textbf{Unpaid Center-Based is an upper limit in each state.} Head Start
+      and state pre-K overlap. A program site can also hold a state licence.
 
-\item \textbf{The scaling in step 5 forces an exact match} to the survey. That
-is a choice rather than a finding, and it is worth revisiting: the alternative
-is to let the registers say what they say and report the disagreement.
+\item \textbf{Step 5 forces an exact match to the survey.} This is a decision,
+      not a result. The alternative is to report the disagreement between the
+      register and the survey.
 
-\item \textbf{The simulator still expects seven rows}, with center care split by
-price. It rejects a file with six. Bridging the two is a mechanical step,
-dividing the center row on a national share, and it is deliberately outside this
-method so that the build does not appear to measure something it cannot.
+\item \textbf{The simulator expects seven rows.} It divides center care by
+      price, and it rejects a file with six rows. The bridge between the two is
+      one mechanical operation. It divides the center row on a national share.
+      The build keeps this operation outside the method, so that the build does
+      not appear to measure a quantity that it cannot measure.
 \end{enumerate}
 
 \end{document}
