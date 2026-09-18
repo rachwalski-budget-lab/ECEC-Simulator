@@ -4,8 +4,10 @@
 \usepackage{booktabs}
 \usepackage{array}
 \usepackage{enumitem}
+\usepackage{float}
 \usepackage{xurl}
-\usepackage[hidelinks]{hyperref}
+\usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue,
+            citecolor=blue]{hyperref}
 \newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
 \urlstyle{tt}
 
@@ -25,9 +27,8 @@ for each care type, and each row holds the annual hours of child care. This memo
 gives the source of those numbers.
 
 The build covers five geographies: Kentucky (KY), New Jersey (NJ), New York
-(NY), New York City (NYC) and Virginia (VA). Section 4 lists every source by the
-agency that publishes it, with the address of each one. Source names in the text
-link to those addresses.
+(NY), New York City (NYC) and Virginia (VA). Every source is linked where it is
+first used.
 
 \subsection*{Why the build exists}
 
@@ -70,7 +71,9 @@ or the other. Do not add them together.
 The build counts two quantities and calculates a third as a remainder. Every
 row in the output divides one of the three.
 
-\begin{center}
+\begin{table}[H]
+\centering
+\caption{Children in non-parental care, by broad setting}
 \begin{tabular}{L{1.6cm}rrrr}
 \toprule
 & \textbf{Center-based} & \textbf{Not center-based} & \textbf{Total} & \textbf{Share center} \\
@@ -82,12 +85,11 @@ NYC & 132,065 & 169,911 & 301,976 & 44\% \\
 VA  & 134,434 & 128,566 & 263,000 & 51\% \\
 \bottomrule
 \end{tabular}
-\end{center}
+\end{table}
 
-Care that is not center-based splits into a part the build counts and a part it
-calculates as a remainder.
-
-\begin{center}
+\begin{table}[H]
+\centering
+\caption{Care that is not center-based, counted and calculated}
 \begin{tabular}{L{1.6cm}rr}
 \toprule
 & \textbf{Licensed home care} & \textbf{Informal care} \\
@@ -99,7 +101,7 @@ NYC & 38,642 & 131,269 \\
 VA  &  5,377 & 123,189 \\
 \bottomrule
 \end{tabular}
-\end{center}
+\end{table}
 
 NY and NYC hold far more licensed home care than the other three geographies,
 and the difference is real rather than an error. The New York Office of Children
@@ -111,7 +113,9 @@ those states too, but it falls into the remainder instead.
 The figures below are counts of children. They are not record counts, and they
 are not weighted survey figures.
 
-\begin{center}
+\begin{table}[H]
+\centering
+\caption{Children by care type}
 \begin{tabular}{L{4.0cm}rrrrr}
 \toprule
 & \textbf{KY} & \textbf{NJ} & \textbf{NY} & \textbf{NYC} & \textbf{VA} \\
@@ -127,13 +131,14 @@ Unpaid Home-Based   &  2,655 &   4,715 &   9,886 &   4,594 &   4,311 \\
                     & \textbf{301,976} & \textbf{263,000} \\
 \bottomrule
 \end{tabular}
-\end{center}
+\end{table}
 
-The output file holds annual hours, shown here in millions. Step 6.3 gives the
-hours for each child, which come from
+Sub-step 6.3 gives the hours for each child, which come from
 \href{https://www.icpsr.umich.edu/web/ICPSR/studies/37941}{NSECE}.
 
-\begin{center}
+\begin{table}[H]
+\centering
+\caption{Annual hours by care type, in millions}
 \begin{tabular}{L{4.0cm}rrrrr}
 \toprule
 & \textbf{KY} & \textbf{NJ} & \textbf{NY} & \textbf{NYC} & \textbf{VA} \\
@@ -146,7 +151,7 @@ Other Paid          & 42.5 &  75.5 & 158.4 &  73.6 &  69.1 \\
 Unpaid Home-Based   &  5.6 &  10.0 &  21.0 &   9.7 &   9.1 \\
 \bottomrule
 \end{tabular}
-\end{center}
+\end{table}
 
 \section{The build}
 
@@ -157,7 +162,9 @@ I read the
 population estimates} for 2019, keep children of age 0 to 4, and add the
 counties together for each geography.
 
-\begin{center}
+\begin{table}[H]
+\centering
+\caption{Children age 0 to 4, 2019}
 \begin{tabular}{L{1.6cm}rr}
 \toprule
 & \textbf{Counties} & \textbf{Children 0--4, 2019} \\
@@ -169,7 +176,7 @@ NYC &   5 &   523,718 \\
 VA  & 133 &   505,477 \\
 \bottomrule
 \end{tabular}
-\end{center}
+\end{table}
 
 NYC uses five counties from the same file: Bronx 100,199; Kings 182,926; New
 York 76,144; Queens 137,095; Richmond 27,354. The city holds 46 percent of the
@@ -201,7 +208,9 @@ by the survey child weight, and take the share in any non-parental care. The
 product of that share and the population from step 1 is the control total, and
 every later count is a share of it.
 
-\begin{center}
+\begin{table}[H]
+\centering
+\caption{The non-parental care rate and the control total}
 \begin{tabular}{L{1.6cm}rrrr}
 \toprule
 & \textbf{Children 0--4} & \textbf{Rate} & \textbf{In non-parental care} & \textbf{Records} \\
@@ -213,7 +222,7 @@ NYC &   523,718 & 57.7\% & 301,976 & --- \\
 VA  &   505,477 & 52.0\% & 263,000 & 121 \\
 \bottomrule
 \end{tabular}
-\end{center}
+\end{table}
 
 \begin{itemize}
 \setlength{\itemsep}{0.45em}
@@ -227,9 +236,44 @@ VA  &   505,477 & 52.0\% & 263,000 & 121 \\
       registers in step 3, and it does.
 \item This rate is the weakest number in the build. Each geography rests on
       about 120 families, which is a standard error of five to six percentage
-      points on a figure that multiplies every later count. Section 4.1 explains
-      why the build still uses a single survey year.
+      points on a figure that multiplies every later count. Sub-step 2.1
+      explains why the build still uses a single survey year.
 \end{itemize}
+
+\subsubsection*{2.1 Why the rate uses one survey year}
+
+Pooling survey years would cut the sampling error on the non-parental rate by 40
+to 47 percent, which would be the cheapest accuracy gain available. The build
+does not pool, because every input has to sit on the simulator's 2019 base year.
+
+A pool of 2018, 2019 and 2020 centres exactly on 2019, so it is the one pool
+that passes the vintage test. It fails on content instead. NSCH collected its
+2020 data through the pandemic, and the use of child care collapsed.
+
+\begin{table}[H]
+\centering
+\caption{Non-parental care rate by survey year}
+\begin{tabular}{L{1.6cm}rrr}
+\toprule
+& \textbf{2018} & \textbf{2019} & \textbf{2020} \\
+\midrule
+KY & 57.3\% & 59.4\% & 45.8\% \\
+NJ & 58.3\% & 60.2\% & 42.6\% \\
+NY & 64.7\% & 57.7\% & 62.1\% \\
+VA & 61.7\% & 52.0\% & 46.7\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+All four rows come from
+\href{https://www.census.gov/programs-surveys/nsch/data/datasets.html}{NSCH}. The
+fall in 2020 is a real change rather than sampling noise, and pooling it in would
+pull every total down by several points. A pool of 2018 and 2019 alone avoids
+that, but it centres on the middle of 2018 while every other input is 2019.
+
+So the rate keeps its full sampling error, and the error is reported instead of
+being traded for a bias that nothing downstream could recover. The repository
+holds all three survey years, so anyone can repeat the test.
 
 \subsection*{Step 3. Convert the registers into children}
 
@@ -281,8 +325,8 @@ differently.
       starting at age 5 or later, and scales a center reaching past age 6 by
       0.60. VDSS appends a contact block to that field, and the build strips it
       before parsing: the appended phone number carries a hyphen, and an
-      unstripped string makes the upper bound unreadable. Section 4.2 gives what
-      that cost when it was missed. With the field read correctly, a span ending
+      unstripped string makes the upper bound unreadable. Sub-step 3.4 gives
+      what that cost when it was missed. With the field read correctly, a span ending
       below age six holds 0.527 of one running to nearly thirteen in Child Day
       Centers and 0.604 in Religious Exempt centers, pooling to 0.540, so 0.60
       is the conservative end of the measured range. Homes take no scale at all,
@@ -346,7 +390,9 @@ bring it down.
       homes take the fill rate alone.
 \end{itemize}
 
-\begin{center}
+\begin{table}[H]
+\centering
+\caption{Providers, capacity and children, from the registers}
 \begin{tabular}{L{1.6cm}L{3.2cm}rrr}
 \toprule
 & & \textbf{Providers} & \textbf{Under-5 capacity} & \textbf{Children} \\
@@ -363,7 +409,7 @@ VA  & Centers        &  3,186 & 188,600 & 170,287 \\
 VA  & Homes          &  1,935 &  12,633 &   7,604 \\
 \bottomrule
 \end{tabular}
-\end{center}
+\end{table}
 
 Providers and capacity come from the five registers named in sub-step 3.1 --
 Child Care Aware for KY, DCF for NJ, OCFS for NY, DOHMH for NYC centers, VDSS
@@ -385,12 +431,106 @@ that to the 1,254 registered providers in the state, giving 1,917 children. The
 in Results is post-calibration; every count in the table above is
 pre-calibration.
 
+\subsubsection*{3.4 A parse defect in the Virginia register}
+
+VDSS writes the age range and a contact block into one field:
+
+\begin{quote}
+\small\texttt{1 month - 12 years 11 months VDSS Contact:}\\
+\small\texttt{Tara K Martin: (804) 588-2312}
+\end{quote}
+
+The build reads the upper bound as the text after the last hyphen. In a string
+like that one, the last hyphen sits inside the telephone number, so the upper
+bound became \texttt{2312}, which carries neither ``year'' nor ``month'' and
+parsed to zero months.
+
+A provider whose upper bound reads zero looks like a provider that serves no
+school-age children, so the build kept 100 percent of its capacity. The rows
+affected mostly run from one month to twelve years and eleven months, which is
+the most mixed span the register holds.
+
+\begin{table}[H]
+\centering
+\caption{Rows affected by the Virginia parse defect}
+\begin{tabular}{L{7.0cm}r}
+\toprule
+& \textbf{Affected} \\
+\midrule
+Rows                                       & 1,055 \\
+Licensed places                            & 78,486 \\
+Share of the VDSS register                 & 21.2\% \\
+Religious Exempt Child Day Centers         & 861 \\
+Voluntarily registered family day homes    & 173 \\
+Certified pre-schools                      & 21 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Stripping the contact block before parsing resolves every one of them, and it
+changes Virginia alone.
+
+\begin{table}[H]
+\centering
+\caption{Virginia before and after the parse fix}
+\begin{tabular}{L{6.0cm}rr}
+\toprule
+& \textbf{Before} & \textbf{After} \\
+\midrule
+Mixed-span centers scaled   &   2,965 &   3,591 \\
+Center capacity below age 5 & 207,835 & 188,600 \\
+Center children             & 187,654 & 170,287 \\
+Calibration factor          &    0.62 &    0.71 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Two things follow from this, and both matter more than the numbers.
+
+The defect was invisible because the calibration hid it. Step 5 forces
+Virginia's formal care to the regional share whatever the register says, so the
+extra 19,235 places were absorbed into a more extreme scale factor rather than
+into an obviously wrong total. What looked like Virginia having an unusually
+complete register was partly a parse failure. The register is still the most
+complete of the four, but less of the gap is real than the earlier figure
+implied.
+
+The scale itself survived the fix. The 0.60 share was first measured on the
+uncleaned strings and happened to land in the right place. Measured on the
+cleaned field it is 0.527 for Child Day Centers and 0.604 for Religious Exempt
+centers, pooling to 0.540, so 0.60 remains defensible as the conservative end.
+The value did not change. What changed is that it now rests on a field the build
+reads correctly.
+
+The build now stops if any Virginia age range parses to an upper bound of zero
+months, so the same failure cannot return silently if VDSS changes the field
+again.
+
+\subsubsection*{3.5 Why the borrowed fill rates are too high}
+
+Two states have published their own figures, and both point the same way.
+
+KY measured its centers at 57 percent full in 2019, against the 90 percent that
+NY, NYC and VA borrow. VA measured a related quantity in 2022, asking 1,968
+providers what they can actually serve and comparing the answer to their licence:
+centers reported 73 percent of their authorized capacity and homes 91 percent,
+with 121,260 licensed places in that sample against 89,374 children the providers
+said they could take.
+
+The build uses neither figure as a rate. KY's applies to KY. VA's is from 2022
+and measures capacity rather than enrollment, so it would duplicate a correction
+the fill rate already makes. What both establish is the direction and rough size
+of the error: licensed capacity overstates real supply by a quarter to a third,
+and the national fill rate does not remove enough of it.
+
 \subsection*{Step 4. Add the programs that count their children}
 
 Head Start, Early Head Start and public pre-K publish actual enrollment, so the
 build takes the published count rather than estimating one.
 
-\begin{center}
+\begin{table}[H]
+\centering
+\caption{Program enrollment, as published}
 \begin{tabular}{L{1.6cm}rrrr}
 \toprule
 & \textbf{Pre-K} & \textbf{Head Start} & \textbf{Early Head Start} & \textbf{Total} \\
@@ -402,7 +542,7 @@ NYC & 26,717 & 13,073 &  5,938 &  45,728 \\
 VA  & 33,790 & 11,579 &  2,507 &  47,876 \\
 \bottomrule
 \end{tabular}
-\end{center}
+\end{table}
 
 \begin{itemize}
 \setlength{\itemsep}{0.45em}
@@ -452,7 +592,9 @@ alone.
       target.
 \end{enumerate}
 
-\begin{center}
+\begin{table}[H]
+\centering
+\caption{The calibration factor and the resulting split}
 \begin{tabular}{L{1.6cm}rrrr}
 \toprule
 & \textbf{Scale factor} & \textbf{Formal} & \textbf{Informal} & \textbf{Informal share} \\
@@ -464,7 +606,7 @@ NYC & 1.05 & 170,707 & 131,269 & 44\% \\
 VA  & 0.71 & 139,811 & 123,189 & 47\% \\
 \bottomrule
 \end{tabular}
-\end{center}
+\end{table}
 
 The build computes each factor from the two totals, so nothing here is chosen by
 hand. This table is the primary check on everything above it, and it reads as
@@ -526,215 +668,6 @@ child-weighted mean weekly hours reported for the child's primary arrangement,
 multiplied by 50 weeks. The figures run from about 1,440 hours a year for
 program center care to about 2,120 for unpaid home care, so the hours column is
 not proportional to the children column.
-
-\section{Provenance}
-
-\subsection*{4.1 Why the rate uses one survey year}
-
-Pooling survey years would cut the sampling error on the non-parental rate by 40
-to 47 percent, which would be the cheapest accuracy gain available. The build
-does not pool, because every input has to sit on the simulator's 2019 base year.
-
-A pool of 2018, 2019 and 2020 centres exactly on 2019, so it is the one pool
-that passes the vintage test. It fails on content instead. NSCH collected its
-2020 data through the pandemic, and the use of child care collapsed.
-
-\begin{center}
-\begin{tabular}{L{1.6cm}rrr}
-\toprule
-& \textbf{2018} & \textbf{2019} & \textbf{2020} \\
-\midrule
-KY & 57.3\% & 59.4\% & 45.8\% \\
-NJ & 58.3\% & 60.2\% & 42.6\% \\
-NY & 64.7\% & 57.7\% & 62.1\% \\
-VA & 61.7\% & 52.0\% & 46.7\% \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-All four rows come from
-\href{https://www.census.gov/programs-surveys/nsch/data/datasets.html}{NSCH}. The
-fall in 2020 is a real change rather than sampling noise, and pooling it in would
-pull every total down by several points. A pool of 2018 and 2019 alone avoids
-that, but it centres on the middle of 2018 while every other input is 2019.
-
-So the rate keeps its full sampling error, and the error is reported instead of
-being traded for a bias that nothing downstream could recover. The repository
-holds all three survey years, so anyone can repeat the test.
-
-\subsection*{4.2 A parse defect in the Virginia register, and what it cost}
-
-VDSS writes the age range and a contact block into one field:
-
-\begin{quote}
-\small\texttt{1 month - 12 years 11 months VDSS Contact:}\\
-\small\texttt{Tara K Martin: (804) 588-2312}
-\end{quote}
-
-The build reads the upper bound as the text after the last hyphen. In a string
-like that one, the last hyphen sits inside the telephone number, so the upper
-bound became \texttt{2312}, which carries neither ``year'' nor ``month'' and
-parsed to zero months.
-
-A provider whose upper bound reads zero looks like a provider that serves no
-school-age children, so the build kept 100 percent of its capacity. The rows
-affected mostly run from one month to twelve years and eleven months, which is
-the most mixed span the register holds.
-
-\begin{center}
-\begin{tabular}{L{7.0cm}r}
-\toprule
-& \textbf{Affected} \\
-\midrule
-Rows                                       & 1,055 \\
-Licensed places                            & 78,486 \\
-Share of the VDSS register                 & 21.2\% \\
-Religious Exempt Child Day Centers         & 861 \\
-Voluntarily registered family day homes    & 173 \\
-Certified pre-schools                      & 21 \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-Stripping the contact block before parsing resolves every one of them, and it
-changes Virginia alone:
-
-\begin{center}
-\begin{tabular}{L{6.0cm}rr}
-\toprule
-& \textbf{Before} & \textbf{After} \\
-\midrule
-Mixed-span centers scaled   &   2,965 &   3,591 \\
-Center capacity below age 5 & 207,835 & 188,600 \\
-Center children             & 187,654 & 170,287 \\
-Calibration factor          &    0.62 &    0.71 \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-Two things follow from this, and both matter more than the numbers.
-
-The defect was invisible because the calibration hid it. Step 5 forces
-Virginia's formal care to the regional share whatever the register says, so the
-extra 19,235 places were absorbed into a more extreme scale factor rather than
-into an obviously wrong total. What looked like Virginia having an unusually
-complete register was partly a parse failure. The register is still the most
-complete of the four, but less of the gap is real than the earlier figure
-implied.
-
-The scale itself survived the fix. The 0.60 share was first measured on the
-uncleaned strings and happened to land in the right place. Measured on the
-cleaned field it is 0.527 for Child Day Centers and 0.604 for Religious Exempt
-centers, pooling to 0.540, so 0.60 remains defensible as the conservative end.
-The value did not change. What changed is that it now rests on a field the build
-reads correctly.
-
-The build now stops if any Virginia age range parses to an upper bound of zero
-months, so the same failure cannot return silently if VDSS changes the field
-again.
-
-\subsection*{4.3 Why the borrowed fill rates are too high}
-
-Two states have published their own figures, and both point the same way.
-
-KY measured its centers at 57 percent full in 2019, against the 90 percent that
-NY, NYC and VA borrow. VA measured a related quantity in 2022, asking 1,968
-providers what they can actually serve and comparing the answer to their licence:
-centers reported 73 percent of their authorized capacity and homes 91 percent,
-with 121,260 licensed places in that sample against 89,374 children the providers
-said they could take.
-
-The build uses neither figure as a rate. KY's applies to KY. VA's is from 2022
-and measures capacity rather than enrollment, so it would duplicate a correction
-the fill rate already makes. What both establish is the direction and rough size
-of the error: licensed capacity overstates real supply by a quarter to a third,
-and the national fill rate does not remove enough of it.
-
-\subsection*{4.4 Sources, by publishing agency}
-
-\begin{description}[style=nextline, leftmargin=0pt, itemsep=0.6em]
-\raggedright
-\item[US Census Bureau] Population Estimates, county characteristics, vintage
-  2019, for children 0--4 by county. \\
-  \url{https://www2.census.gov/programs-surveys/popest/datasets/2010-2019/counties/asrh/cc-est2019-alldata.csv} \\
-  National Survey of Children's Health, topical files for 2018, 2019 and 2020,
-  for the non-parental care rate. \\
-  \url{https://www.census.gov/programs-surveys/nsch/data/datasets.html}
-
-\item[Administration for Children and Families] Part of the US Department of
-  Health and Human Services. Center-based providers in 2012 and 2019, for the 90
-  percent center fill rate. \\
-  \url{https://acf.gov/opre/report/center-based-early-care-and-education-providers-2012-and-2019-counts-and} \\
-  Home-based providers in 2012 and 2019, for the 60 and 80 percent home
-  figures. \\
-  \url{https://acf.gov/opre/report/home-based-early-care-and-education-providers-2012-and-2019-counts-and-characteristics} \\
-  Head Start service locations and funded places, for the NYC share. \\
-  \url{https://s3foa.s3.us-east-1.amazonaws.com/HS_Service_Locations.csv} \\
-  Head Start Program Facts for fiscal year 2019, used to check the KY program
-  figures. \\
-  \url{https://acf.gov/ohs/data/program-facts}
-
-\item[ICPSR, University of Michigan] National Survey of Early Care and Education
-  2019, public-use files, study 37941. Supplies the formal share by region, the
-  informal split, the hours for each care type, and the price bands behind the
-  1,686-hour figure. \\
-  \url{https://www.icpsr.umich.edu/web/ICPSR/studies/37941}
-
-\item[National Center for Education Statistics] Common Core of Data,
-  school-level pre-kindergarten membership, 2018--19. \\
-  \url{https://nces.ed.gov/ccd/Data/zip/ccd_sch_052_1819_l_1a_091019.zip}
-
-\item[National Institute for Early Education Research] The State of Preschool
-  2019, for Head Start at ages 3 and 4. \\
-  \url{https://nieer.org/state-preschool-yearbook-2019} \\
-  The State(s) of Head Start and Early Head Start, 2023, for Early Head Start. \\
-  \url{https://nieer.org/sites/default/files/2023-10/hs_fullreport.pdf}
-
-\item[Child Care Aware of America] Kentucky licensed and certified provider
-  registers, September 2018, republished as feature services. \\
-  \url{https://services7.arcgis.com/s3vGpGobX9nzlLH3/arcgis/rest/services/Providers_Licensed/FeatureServer}
-
-\item[Child Care Aware of Kentucky] 2019 Kentucky Workforce Study, Table 20, for
-  capacity and enrollment by age band. \\
-  \url{https://www.childcareawareky.org/research/}
-
-\item[New Jersey Department of Children and Families] Licensed child care
-  centers, May 2019. \\
-  \url{https://data.nj.gov/resource/cru5-4rmm.csv}
-
-\item[New Jersey Department of Human Services] 2021 Child Care Market Rate
-  Survey, for the 67 percent center fill rate and the family child care provider
-  universe. \\
-  \url{https://www.childcarenj.gov/Resources/Reports}
-
-\item[New York Office of Children and Family Services] Licensed child care
-  providers, all 62 counties. \\
-  \url{https://data.ny.gov/resource/cb42-qumz.csv} \\
-  Provider counts and capacity by modality, 2015 to 2025, published separately
-  for NYC and the rest of the state, for the vintage factors in sub-step 3.2.
-  Held in the repository; the agency's site blocks automated retrieval.
-
-\item[New York City Department of Health and Mental Hygiene] Child care centers
-  permitted under Article 47 of the city Health Code. \\
-  \url{https://data.cityofnewyork.us/resource/gy3q-4tzp.csv}
-
-\item[Virginia Department of Social Services] Licensed and approved child care
-  providers, all approval routes. \\
-  \url{https://legacy.dss.virginia.gov/facility/search/cc2.cgi}
-
-\item[Virginia open data portal] Child Care Data Matrix, June 2020, published by
-  VDSS, for the 0.90 vintage factor. \\
-  \url{https://data.virginia.gov/dataset/child-care-data-matrix-virginia-s-estimated-child-care-capacity-demand-june-2020}
-
-\item[Annenberg Institute, Brown University] Miller-Bains, Yu and Bassok, \emph{Is Authorized Capacity a Good Measure of Child Care
-  Providers' Current Capacity? New evidence from Virginia}, EdWorkingPaper
-  24-983, 2024. \\
-  \url{https://edworkingpapers.com/ai24-983}
-
-\item[This repository] \texttt{src/1\_processing/1b\_acs\_processing.R}, where
-  the filter \texttt{age < 5} appears in seven places, and
-  \texttt{state\_data/}, which holds the build and every raw source above.
-\end{description}
 
 \section{Limits}
 
