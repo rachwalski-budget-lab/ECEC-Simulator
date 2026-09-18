@@ -108,11 +108,25 @@ CALIBRATION_SANE <- c(0.2, 5)
 # SHARED INPUTS
 #=============================================================================
 
-raw_path <- function(...) file.path(STATE_DATA_ROOT, 'raw', ...)
+# WHERE THE DATA IS. Defaults sit inside this directory, which is what a fresh
+# clone wants. The cluster keeps 54MB of sources outside the code tree, so
+# config_local.yaml (git-ignored) overrides both roots there. Two keys, no
+# validation ceremony -- a wrong path fails on the first read with the path in
+# the message.
+PATHS <- local({
+  f <- file.path(STATE_DATA_ROOT, 'config_local.yaml')
+  d <- list(raw      = file.path(STATE_DATA_ROOT, 'raw'),
+            by_state = file.path(STATE_DATA_ROOT, 'by-state'))
+  if (!file.exists(f) || !requireNamespace('yaml', quietly = TRUE)) return(d)
+  cfg <- yaml::read_yaml(f)$paths
+  list(raw      = cfg$raw      %||% d$raw,
+       by_state = cfg$by_state %||% d$by_state)
+})
 
-geo_raw_path <- function(geo, ...) {
-  file.path(STATE_DATA_ROOT, 'by-state', geo, 'raw', ...)
-}
+
+raw_path <- function(...) file.path(PATHS$raw, ...)
+
+geo_raw_path <- function(geo, ...) file.path(PATHS$by_state, geo, 'raw', ...)
 
 
 read_chr <- function(path) {

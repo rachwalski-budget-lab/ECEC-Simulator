@@ -16,5 +16,5 @@ paths:
 
   # Sources used across all 51 -- PEP, NDCP, NONEMP, HSSL, CCD, NSCH. These are
   # national files cut to the six states in scope and to the columns the build
-  # reads; see state_data/SOURCES.csv for where each came from.
+  # reads; see state_data/SOURCES.md for where each came from.
   raw: 'state_data/raw'
