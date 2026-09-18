@@ -78,11 +78,11 @@ row in the output divides one of the three.
 \toprule
 & \textbf{Center-based} & \textbf{Not center-based} & \textbf{Total} & \textbf{Share center} \\
 \midrule
-KY  &  81,326 &  80,604 & 161,930 & 50\% \\
-NJ  & 173,225 & 136,721 & 309,946 & 56\% \\
-NY  & 270,982 & 378,847 & 649,829 & 42\% \\
-NYC & 132,065 & 169,911 & 301,976 & 44\% \\
-VA  & 134,459 & 128,541 & 263,000 & 51\% \\
+KY  &  82,543 &  79,387 & 161,930 & 51\% \\
+NJ  & 173,317 & 136,629 & 309,946 & 56\% \\
+NY  & 274,926 & 374,903 & 649,829 & 42\% \\
+NYC & 133,854 & 168,122 & 301,976 & 44\% \\
+VA  & 134,663 & 128,337 & 263,000 & 51\% \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -94,11 +94,11 @@ VA  & 134,459 & 128,541 & 263,000 & 51\% \\
 \toprule
 & \textbf{Licensed home care} & \textbf{Informal care} \\
 \midrule
-KY  &  4,756 &  75,848 \\
-NJ  &  1,987 & 134,734 \\
-NY  & 96,366 & 282,481 \\
-NYC & 38,642 & 131,269 \\
-VA  &  5,352 & 123,189 \\
+KY  &  3,539 &  75,848 \\
+NJ  &  1,895 & 134,734 \\
+NY  & 92,423 & 282,481 \\
+NYC & 36,853 & 131,269 \\
+VA  &  5,147 & 123,189 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -120,9 +120,9 @@ are not weighted survey figures.
 \toprule
 & \textbf{KY} & \textbf{NJ} & \textbf{NY} & \textbf{NYC} & \textbf{VA} \\
 \midrule
-Center-Based        & 37,550 & 116,402 & 168,235 &  86,337 &  86,583 \\
+Center-Based        & 38,767 & 116,494 & 172,179 &  88,127 &  86,787 \\
 Unpaid Center-Based & 43,776 &  56,823 & 102,747 &  45,728 &  47,876 \\
-Paid Home-Based     &  4,756 &   1,987 &  96,366 &  38,642 &   5,352 \\
+Paid Home-Based     &  3,539 &   1,895 &  92,423 &  36,853 &   5,147 \\
 Other Unpaid        & 45,830 &  81,411 & 170,686 &  79,318 &  74,436 \\
 Other Paid          & 27,363 &  48,607 & 101,909 &  47,357 &  44,442 \\
 Unpaid Home-Based   &  2,655 &   4,715 &   9,886 &   4,594 &   4,311 \\
@@ -143,9 +143,9 @@ Sub-step 6.3 gives the hours for each child, which come from
 \toprule
 & \textbf{KY} & \textbf{NJ} & \textbf{NY} & \textbf{NYC} & \textbf{VA} \\
 \midrule
-Center-Based        & 63.3 & 196.2 & 283.6 & 145.5 & 146.0 \\
+Center-Based        & 65.3 & 196.4 & 290.2 & 148.6 & 146.3 \\
 Unpaid Center-Based & 62.9 &  81.6 & 147.6 &  65.7 &  68.8 \\
-Paid Home-Based     &  9.1 &   3.8 & 185.0 &  74.2 &  10.3 \\
+Paid Home-Based     &  6.8 &   3.6 & 177.4 &  70.7 &   9.9 \\
 Other Unpaid        & 88.4 & 157.1 & 329.3 & 153.0 & 143.6 \\
 Other Paid          & 42.5 &  75.5 & 158.4 &  73.6 &  69.1 \\
 Unpaid Home-Based   &  5.6 &  10.0 &  21.0 &   9.7 &   9.1 \\
@@ -472,9 +472,9 @@ Certified pre-schools                      & 21 \\
 \end{table}
 
 Stripping the contact block before parsing resolves every one of them, and it
-changes Virginia alone. The table below isolates that one change; a later
-correction to the rebase denominator, described in sub-step 3.2, moved the
-factor again to 0.695.
+changes Virginia alone. The table below isolates that one change; two later corrections
+moved the factor again -- the rebase denominator in sub-step 3.2, and the
+programme overlap in sub-step 4.1 -- to 0.669.
 
 \begin{table}[H]
 \centering
@@ -569,15 +569,74 @@ VA  & 33,790 & 11,579 &  2,507 &  47,876 \\
       location file}: 7,194 funded places sit in the five boroughs against
       20,285 in the state, so the city takes 35 percent of the state level.
 \item The build subtracts these children from the licensed center count rather
-      than adding them. A Head Start center usually holds a state licence, so
-      step 3 already counted its children, and adding them would count them
-      twice.
+      than adding them, because a Head Start center that holds a state licence
+      was already counted in step 3. It subtracts only the share that really is
+      in the register, which sub-step 4.1 measures.
 \item A published count does not move in step 5. The build treats it as a
       census, so the calibration falls entirely on the capacity-derived counts.
 \item This row is an upper limit everywhere. Head Start and state pre-K overlap
       in an unknown number of children, and no source publishes the size of that
       overlap.
 \end{itemize}
+
+
+\subsubsection*{4.1 How much of a programme is already in the register}
+
+A programme site that holds a state licence sits inside the capacity step 3
+converted, so its children would be counted twice unless they are subtracted. A
+site the register never lists does not, and subtracting it removes children who
+were never counted in the first place. Until 18 September 2026 the build
+subtracted everything, which assumed the first case always holds.
+
+I measured it. Every open Head Start service location in the federal file was
+matched to the register on ZIP plus street number plus street name, and on
+coordinates within 25 metres where both sides carry them, weighted by funded
+places.
+
+\begin{table}[H]
+\centering
+\caption{Share of Head Start places at an address the register also holds}
+\begin{tabular}{L{1.6cm}rrr}
+\toprule
+& \textbf{Head Start} & \textbf{Early Head Start} & \textbf{County build, 2026} \\
+\midrule
+KY  & 37.1\% & 50.6\% & 38.1\% \\
+NJ  & 64.7\% & 62.7\% & 63.0\% \\
+NY  & 77.3\% & 77.5\% & 49.3\% \\
+NYC & 70.6\% & 67.9\% & --- \\
+VA  & \multicolumn{2}{l}{register publishes no address} & --- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The last column is the same quantity measured independently by the earlier
+county build. KY and NJ agree to within 1.7 percentage points, which is the
+check on this method. NY differs because the match here reads both regulators,
+OCFS and DOHMH, and much of the state's Head Start sits in the city. VA cannot
+be matched at all, so it takes the mean of the four.
+
+Two things this does not settle.
+
+\begin{itemize}
+\setlength{\itemsep}{0.45em}
+\item Pre-K is not measured, and it is 53 to 73 percent of each programme total,
+      so it carries most of the remaining uncertainty. It stays at 100 percent,
+      which is the assumption the whole step used to make, so this change only
+      ever reduces the subtraction. Public-school pre-K is generally exempt from
+      child care licensing, so the true figure is probably well below 100
+      percent. Settling it needs school addresses from the federal geocode file,
+      which is not held here.
+\item The Head Start file is a 2026 export and the registers are not, so a site
+      that has since closed or moved will fail to match. Every figure above is
+      therefore a floor, and KY's is the weakest because its register is from
+      2018.
+\end{itemize}
+
+What the measurement buys is visible in step 5. The calibration factors ran 0.62
+to 1.58 while the build subtracted everything. They now run 0.67 to 1.17, and
+three of the five sit within one percent of no adjustment at all. Kentucky moved
+most, from 1.58 to 1.17, because it has both the lowest overlap and the smallest
+register.
 
 \subsection*{Step 5. Calibrate the total to the survey}
 
@@ -605,11 +664,11 @@ alone.
 \toprule
 & \textbf{Scale factor} & \textbf{Formal} & \textbf{Informal} & \textbf{Informal share} \\
 \midrule
-KY  & 1.58 &  86,082 &  75,848 & 47\% \\
-NJ  & 1.04 & 175,212 & 134,734 & 44\% \\
-NY  & 1.03 & 367,348 & 282,481 & 44\% \\
-NYC & 1.05 & 170,707 & 131,269 & 44\% \\
-VA  & 0.69 & 139,811 & 123,189 & 47\% \\
+KY  & 1.17 &  86,082 &  75,848 & 47\% \\
+NJ  & 0.99 & 175,212 & 134,734 & 44\% \\
+NY  & 0.99 & 367,348 & 282,481 & 44\% \\
+NYC & 1.01 & 170,707 & 131,269 & 44\% \\
+VA  & 0.67 & 139,811 & 123,189 & 47\% \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -620,22 +679,26 @@ follows.
 
 \begin{itemize}
 \setlength{\itemsep}{0.45em}
-\item NJ, NY and NYC barely move. Their counts landed within two percentage
-      points of the survey before the build touched them, which means three
-      registers kept by three different agencies -- DCF, OCFS and DOHMH -- agree
-      with one independent national survey.
+\item NJ, NY and NYC barely move, by one percent or less. Their counts landed
+      almost exactly on the survey before the build touched them, which means
+      three registers kept by three different agencies -- DCF, OCFS and DOHMH --
+      agree with one independent national survey.
       That agreement is the strongest evidence here that the conversion in step
       3 is sound.
-\item VA falls by 30 percent. The VDSS register is the most complete of the
+\item VA falls by 33 percent. The VDSS register is the most complete of the
       four, listing unlicensed and voluntarily registered family homes that no
       other state here records, and it also borrows the national fill rate. Both push its
       count of formal care up, so the correction pushes it back down.
-\item KY rises by 58 percent, and this is the informative case. KY is the only state
-      that measured how full its own centers are, and the answer was 57 percent
-      against the 90 percent that NY and VA borrow. The borrowed figure is too
-      high by more than half. KY moving up while VA moves down is exactly what
-      that difference predicts, so the calibration is correcting an error that
-      has been measured rather than absorbing one that has not.
+\item KY rises by 17 percent, and this is the informative case. KY is the only
+      state that measured how full its own centers are, and the answer was 57
+      percent against the 90 percent that NY and VA borrow. The borrowed figure
+      is too high by more than half. KY moving up while VA moves down is exactly
+      what that difference predicts, so the calibration is correcting an error
+      that has been measured rather than absorbing one that has not.
+\item Every factor now sits between 0.67 and 1.17, where the spread was 0.62 to
+      1.58 before sub-step 4.1 replaced an assumption with a measurement. A
+      calibration that barely has to move is the best sign available that the
+      steps before it are sound.
 \end{itemize}
 
 \subsection*{Step 6. Complete the rows}

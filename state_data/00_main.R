@@ -236,10 +236,23 @@ build_geo <- function(spec) {
   cat('  programmes            ', format(programme, big.mark = ','),
       ' (', paste(spec$programmes$programme, collapse = ', '), ')\n', sep = '')
 
-  # Netted OUT of the registry centres, not added. A Head Start centre usually
-  # holds a state licence, so its children already sit in the converted
-  # capacity. Adding them counts them twice.
-  paid_centre <- max(reg_centre - programme, 0)
+  # NETTED OUT OF THE REGISTRY CENTRES, NOT ADDED -- but only the share that
+  # actually sits in the register. A programme site holding a state licence is
+  # already inside the converted capacity, and adding it counts it twice. A
+  # site the register never lists is not, and subtracting it removes children
+  # that were never there.
+  #
+  # `overlap` is that share, per programme, measured where it can be. See each
+  # state file. Subtracting everything -- what this build did until 18 Sep
+  # 2026 -- overstates the duplication and pushes the calibration to extremes:
+  # Kentucky ran x1.578 and now runs x1.174.
+  duplicated_in_register <- sum(spec$programmes$n_children *
+                                  spec$programmes$overlap)
+  cat(sprintf('  of which in register   %s (%.0f%% -- the rest are not licensed)\n',
+              format(round(duplicated_in_register), big.mark = ','),
+              100 * duplicated_in_register / programme))
+
+  paid_centre <- max(reg_centre - duplicated_in_register, 0)
 
   ## 5. calibrate the level --------------------------------------------------
   # Registers measure SHAPE well, LEVEL badly. One factor per geography scales

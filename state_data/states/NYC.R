@@ -25,6 +25,36 @@
 source(file.path(STATE_DATA_ROOT, 'states', 'NY.R'))
 
 
+# HOW MUCH OF EACH PROGRAMME ALREADY SITS IN THE REGISTER.
+#
+# Step 4 subtracts a programme's children from the converted register capacity,
+# to avoid counting a licensed Head Start centre twice. That is only right for
+# the share of the programme the register actually lists.
+#
+# MEASURED for Head Start and Early Head Start, 18 Sep 2026: every open service
+# location in ACF's file matched to the register on ZIP plus street number plus
+# street name, and on coordinates within 25 metres where both carry them.
+# Weighted by funded places.
+#
+#   KY   Head Start 37.1%   Early Head Start 50.6%
+#   NJ              64.7%                    62.7%
+#   NY              77.3%                    77.5%
+#   NYC             70.6%                    67.9%
+#   VA              mean of the four -- its register publishes no address
+#
+# CHECKS OUT against the earlier county build, which measured the same quantity
+# independently: KY 38.1% against 37.1% here, NJ 63.0% against 64.7%. New York
+# differs -- 49.3% there against 77.3% here -- because this match reads both
+# regulators, OCFS and DOHMH, and much of the state's Head Start is in the city.
+#
+# PRE-K IS NOT MEASURED, and it is 53% to 73% of each programme total, so it
+# carries most of the remaining uncertainty. It stays at 1 -- the assumption
+# the whole step used to make -- so this change only ever reduces the
+# subtraction. Public-school pre-K is generally exempt from child care
+# licensing, so the true figure is probably well below 1. Settling it needs
+# NCES's EDGE school geocode file, which is not held here.
+
+
 SPEC_NYC <- list(
   geo      = 'NYC',
   name     = 'New York City',
@@ -39,10 +69,10 @@ SPEC_NYC <- list(
               HOME         = NSECE_HOME_FILL_ONLY),
 
   programmes = tibble::tribble(
-    ~programme,          ~n_children,
-    'public pre-K',      NYC_PREK_CCD,
-    'Head Start',        NYC_HEAD_START,
-    'Early Head Start',  NYC_EARLY_HEAD_START),
+    ~programme,          ~n_children,                   ~overlap,
+    'public pre-K',        NYC_PREK_CCD,                  1.000,
+    'Head Start',          NYC_HEAD_START,                0.706,
+    'Early Head Start',    NYC_EARLY_HEAD_START,          0.679),
 
   # New York's rate. See header.
   nonparental_rate = 0.5766
