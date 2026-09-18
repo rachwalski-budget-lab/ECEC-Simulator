@@ -179,7 +179,7 @@ SPEC_NY <- list(
 
   programmes = tibble::tribble(
     ~programme,          ~n_children,                   ~overlap,
-    'public pre-K',        NY_PREK_CCD,                   1.000,
+    'public pre-K',        NY_PREK_CCD,                   0.522,
     'Head Start',          NY_HEAD_START,                 0.773,
     'Early Head Start',    NY_EARLY_HEAD_START,           0.775),
 

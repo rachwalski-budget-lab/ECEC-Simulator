@@ -173,7 +173,7 @@ SPEC_KY <- list(
 
   programmes = tibble::tribble(
     ~programme,          ~n_children,                   ~overlap,
-    'public pre-K',        KY_PREK_CCD,                   1.000,
+    'public pre-K',        KY_PREK_CCD,                   0.370,
     'Head Start',          KY_HEAD_START,                 0.371,
     'Early Head Start',    KY_EARLY_HEAD_START,           0.506),
 

@@ -437,3 +437,14 @@ recorded here so they can be fetched again rather than re-found.
 
 The two NSCH waves either side of 2019 are NOT in this table. They stay, so the
 pooling test that rejected them can be repeated.
+
+## Added for the programme-overlap match
+
+| File | What it is | Where it came from |
+|---|---|---|
+| `US_EDGE__public_school_geocodes__2018-19.csv` | street, ZIP and coordinates for every public school in KY, NJ, NY and VA — 11,169 rows, cut from a 63MB national SAS file | NCES EDGE, `EDGE_GEOCODE_PUBLICSCH_1819.zip` |
+| `US_CCD__public_school_prekindergarten_children_by_school__2018-19.csv` | pre-K membership school by school, 7,292 rows, cut from a 2.5GB national file on `GRADE = Pre-Kindergarten` and `TOTAL_INDICATOR = Subtotal 4 - By Grade` | NCES CCD, `ccd_sch_052_1819_l_1a_091019.zip` |
+
+Both are extracts, not the source files, which are far too large to hold. The
+school-level pre-K counts sum to exactly the county totals already held, which
+is what makes the extract safe to trust.
