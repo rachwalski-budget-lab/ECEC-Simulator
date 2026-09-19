@@ -183,7 +183,12 @@ SPEC_KY <- list(
   # and Kentucky's rate collapses to 45.8% against 57-59% either side. Pooling
   # 2018+2019 alone centres on mid-2018 while every other input is pinned to
   # 2019. Tested, rejected, documented in METHOD.md.
-  nonparental_rate = 0.5940
+  nonparental_rate = 0.5940,
+
+  # Standard error on that rate, sqrt(p(1-p)/n_eff) with Kish effective n
+  # from the same 147 records. Step 2 carries it through to an interval on
+  # every output row; nothing else in the build reads it.
+  nonparental_rate_se = 0.0488
 )
 
 

@@ -130,7 +130,12 @@ SPEC_NJ <- list(
   # NSCH 2019 k6q20, children 0-4, child-weighted. n = 101 records -- thinnest
   # cell in the build. Single wave; see METHOD.md on why pooling was rejected.
   # New Jersey's 2020 rate collapses to 42.6% against 58-60% either side.
-  nonparental_rate = 0.6022
+  nonparental_rate = 0.6022,
+
+  # Standard error on that rate, sqrt(p(1-p)/n_eff) with Kish effective n
+  # from the same 101 records. Step 2 carries it through to an interval on
+  # every output row; nothing else in the build reads it.
+  nonparental_rate_se = 0.0624
 )
 
 

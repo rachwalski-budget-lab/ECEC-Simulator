@@ -75,7 +75,12 @@ SPEC_NYC <- list(
     'Early Head Start',    NYC_EARLY_HEAD_START,          0.679),
 
   # New York's rate. See header.
-  nonparental_rate = 0.5766
+  nonparental_rate = 0.5766,
+
+  # Standard error on that rate, sqrt(p(1-p)/n_eff) with Kish effective n
+  # from the same 112 records. Step 2 carries it through to an interval on
+  # every output row; nothing else in the build reads it.
+  nonparental_rate_se = 0.0589
 )
 
 

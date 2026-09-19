@@ -354,6 +354,59 @@ write_geo <- function(res, geo) {
 }
 
 
+
+write_interval <- function(spec, point, geo) {
+
+  #----------------------------------------------------------------------------
+  # Sidecar carrying the sampling error of the one soft input through to every
+  # output row.
+  #
+  # The non-parental rate rests on ~120 families per geography and carries a
+  # standard error of five to six points. Every count is a share of the total
+  # that rate produces, so that error reaches every row. It is NOT proportional:
+  # programme counts hold fixed while the calibration absorbs the difference, so
+  # the build is re-run at each bound rather than the point estimate scaled.
+  #
+  # The interval covers sampling error in the rate ALONE. It says nothing about
+  # the borrowed fill rates, the register's vintage, or the programme overlap.
+  # Those are larger and are not quantified anywhere.
+  #
+  # Params:
+  #   - spec (list), point (tibble) the central build, geo (chr)
+  #
+  # Returns: (chr) path written
+  #----------------------------------------------------------------------------
+
+  se <- spec$nonparental_rate_se
+  if (is.null(se)) {
+    cat('  no interval           ', geo, 'declares no standard error\n')
+    return(invisible(NULL))
+  }
+
+  at <- function(rate) {
+    s <- spec
+    s$nonparental_rate <- rate
+    quiet <- utils::capture.output(r <- build_geo(s))
+    setNames(r$annual_hours, r$ecec_type)
+  }
+  lo <- at(spec$nonparental_rate - 1.96 * se)
+  hi <- at(spec$nonparental_rate + 1.96 * se)
+
+  out <- tibble::tibble(ecec_type    = point$ecec_type,
+                        annual_hours = point$annual_hours,
+                        low          = unname(lo[point$ecec_type]),
+                        high         = unname(hi[point$ecec_type]))
+  f <- file.path(STATE_DATA_ROOT, 'out', paste0(geo, '_interval.csv'))
+  readr::write_csv(out, f)
+  cat(sprintf('  interval              rate %.1f%% (%.1f to %.1f), hours +/- %.0f%%\n',
+              100 * spec$nonparental_rate,
+              100 * (spec$nonparental_rate - 1.96 * se),
+              100 * (spec$nonparental_rate + 1.96 * se),
+              100 * (sum(out$high) / sum(out$annual_hours) - 1)))
+  f
+}
+
+
 check_geo <- function(res, geo) {
 
   #----------------------------------------------------------------------------
@@ -396,13 +449,16 @@ main <- function(args = commandArgs(trailingOnly = TRUE)) {
     return(invisible(NULL))
   }
 
-  run_checks <- '--check' %in% args
+  run_checks    <- '--check' %in% args
+  want_interval <- '--interval' %in% args
   results <- list()
   failures <- 0
 
   for (g in geos) {
-    res <- build_geo(load_spec(g))
+    spec <- load_spec(g)
+    res  <- build_geo(spec)
     write_geo(res, g)
+    if (want_interval) write_interval(spec, res, g)
     if (run_checks) failures <- failures + check_geo(res, g)
     results[[g]] <- res
   }

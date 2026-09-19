@@ -186,7 +186,12 @@ SPEC_NY <- list(
   # NSCH 2019 k6q20, children 0-4, child-weighted. n = 112 records.
   # Single wave; see METHOD.md. New York's 2020 rate holds up better than the
   # other three (62.1%) but the pool still fails on the other two states.
-  nonparental_rate = 0.5766
+  nonparental_rate = 0.5766,
+
+  # Standard error on that rate, sqrt(p(1-p)/n_eff) with Kish effective n
+  # from the same 112 records. Step 2 carries it through to an interval on
+  # every output row; nothing else in the build reads it.
+  nonparental_rate_se = 0.0589
 )
 
 

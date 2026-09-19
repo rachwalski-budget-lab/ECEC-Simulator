@@ -44,10 +44,11 @@ follow from that, and they hold across every step below.
 
 \begin{itemize}
 \setlength{\itemsep}{0.45em}
-\item The build works at the state level. It reads county data one time, in step
-      1, and it adds the counties together immediately. No later step uses a
-      county, so the build needs no county crosswalk and no county name
-      matching.
+\item The build works at the state level. County data enters twice and only
+      twice: step 1 sums counties to get the population, and the NYC build
+      selects five of them, because NYC is a sub-state geography and cannot be
+      defined any other way. No state-level geography uses a county anywhere, so
+      the build needs no county crosswalk and no county name matching.
 \item The build prefers a state measurement to a national one. It uses a
       national figure only where the state publishes nothing, and it says so
       each time it does.
@@ -236,8 +237,10 @@ VA  &   505,477 & 52.0\% & 263,000 & 121 \\
       registers in step 3, and it does.
 \item This rate is the weakest number in the build. Each geography rests on
       about 120 families, which is a standard error of five to six percentage
-      points on a figure that multiplies every later count. Sub-step 2.1
-      explains why the build still uses a single survey year.
+      points on a figure that multiplies every later count. Carried through to
+      the output, that is 17 to 23 percent on the hours in every row. Sub-step
+      2.1 explains why the build still uses a single survey year, and sub-step
+      2.2 what it does with the error instead.
 \end{itemize}
 
 \subsubsection*{2.1 Why the rate uses one survey year}
@@ -275,6 +278,39 @@ that, but its midpoint falls in the middle of 2018 while every other input is 20
 So the rate keeps its full sampling error. The memo reports that error rather
 than trading it for a bias that nothing downstream could recover. The repository
 holds all three survey years, so anyone can repeat the test.
+
+\subsubsection*{2.2 What the build does with the error instead}
+
+The rate keeps its sampling error, so the build reports it. Alongside each
+output file it writes \texttt{<GEO>\_interval.csv}, which carries a low and a
+high figure for every care type.
+
+The bounds are the rate plus and minus 1.96 standard errors. The build is re-run
+at each bound rather than the central estimate being scaled, because the
+response is not proportional: program enrollment is a published count and holds
+fixed at every rate, so the calibration absorbs the difference and each care
+type moves by a different amount. Unpaid Center-Based does not move at all.
+
+\begin{table}[H]
+\centering
+\caption{The rate interval, and what it does to total hours}
+\begin{tabular}{L{1.6cm}rrr}
+\toprule
+& \textbf{Rate} & \textbf{95\% interval} & \textbf{Hours} \\
+\midrule
+KY  & 59.4\% & 49.8 to 69.0\% & $\pm$17\% \\
+NJ  & 60.2\% & 48.0 to 72.5\% & $\pm$21\% \\
+NY  & 57.7\% & 46.1 to 69.2\% & $\pm$21\% \\
+NYC & 57.7\% & 46.1 to 69.2\% & $\pm$21\% \\
+VA  & 52.0\% & 40.5 to 63.6\% & $\pm$23\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+This interval covers sampling error in the non-parental rate and nothing else.
+It says nothing about the borrowed fill rates, the register vintages or the
+program overlap. Those are not quantified anywhere, and at least the first is
+likely to be larger.
 
 \subsection*{Step 3. Convert the registers into children}
 
@@ -524,6 +560,15 @@ the fill rate already makes. What both establish is the direction and rough size
 of the error: licensed capacity overstates real supply by a quarter to a third,
 and the national fill rate does not remove enough of it.
 
+New York cannot be settled from its own survey, and that is now checked rather
+than assumed. The
+\href{https://ocfs.ny.gov/programs/childcare/}{2019 OCFS market rate survey}
+publishes eleven tables. Every one of them reports rates, percentiles or
+response rates. Its questionnaire does ask each provider how many children are
+enrolled full-time and part-time in each age band, but no table reports the
+answer. The fill rate NY would need exists in that survey's returns and not in
+its output.
+
 \subsection*{Step 4. Add the programs that count their children}
 
 Head Start, Early Head Start and public pre-K publish actual enrollment, so the
@@ -762,9 +807,11 @@ the children column.
       state pre-K overlap by an unpublished amount and a program site may also
       hold a state license.
 
-\item Nothing propagates the uncertainty. The survey rate carries a standard
-      error of five to six percentage points, which is roughly ten percent on
-      every number in every file, and the output is bare point estimates.
+\item Only one of the soft inputs carries an interval. Sub-step 2.2 propagates
+      the survey rate's sampling error, but the borrowed fill rates, the
+      register vintages and the program overlap have no stated error at all,
+      and they are probably larger. The interval understates the real
+      uncertainty and should be read as a floor on it.
 
 \item Step 5 forces an exact match to the survey. That is a decision rather than
       a finding. The alternative is to let the registers stand and report the

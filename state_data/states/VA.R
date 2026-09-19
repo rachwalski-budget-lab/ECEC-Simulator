@@ -269,7 +269,12 @@ SPEC_VA <- list(
   # Single wave. Virginia moves most between waves of any state here -- 61.7%
   # in 2018, 52.0% in 2019, 46.7% in 2020 -- so pooling would do the most
   # damage to the level precisely where the level is least stable.
-  nonparental_rate = 0.5203
+  nonparental_rate = 0.5203,
+
+  # Standard error on that rate, sqrt(p(1-p)/n_eff) with Kish effective n
+  # from the same 121 records. Step 2 carries it through to an interval on
+  # every output row; nothing else in the build reads it.
+  nonparental_rate_se = 0.0588
 )
 
 
