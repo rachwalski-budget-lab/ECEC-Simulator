@@ -7,6 +7,7 @@ hours by care type — from each state's own administrative data.
 Rscript state_data/00_main.R --geo KY        # build one
 Rscript state_data/00_main.R --all           # build all five
 Rscript state_data/00_main.R --all --check   # build and run the invariants
+Rscript state_data/00_main.R --all --interval  # also write the error bounds
 ```
 
 **[docs/SUMMARY_method.pdf](docs/SUMMARY_method.pdf) is the document to read.**
@@ -23,9 +24,11 @@ Supply stays national. This directory writes demand only.
 
 ## State level, not county level
 
-County data is read once, in the population step, and it is read to be summed.
-Nothing joins on county. There is no geography crosswalk, no county name
-recoding, no per-county reconciliation, and no county output.
+County data enters twice and only twice: the population step sums counties, and
+the NYC build selects five of them, because NYC is a sub-state geography and
+cannot be defined any other way. No state-level geography uses a county
+anywhere. There is no geography crosswalk, no county name recoding, no
+per-county reconciliation, and no county output.
 
 That is the whole difference from the earlier version of this pipeline, and it
 removed about 3,000 lines.
@@ -43,6 +46,7 @@ raw/                         sources used by every geography, held once
 by-state/<GEO>/raw/          that geography's own sources
 raw/documentation/           PDFs behind any hand-extracted number
 out/<GEO>.csv                the output
+out/<GEO>_interval.csv       low and high bounds, from the survey rate
 config_local.example.yaml    copy to config_local.yaml (git-ignored)
 ```
 
