@@ -448,3 +448,14 @@ pooling test that rejected them can be repeated.
 Both are extracts, not the source files, which are far too large to hold. The
 school-level pre-K counts sum to exactly the county totals already held, which
 is what makes the extract safe to trust.
+
+## Virginia provider addresses
+
+| File | What it is | Where it came from |
+|---|---|---|
+| `by-state/VA/raw/VA_VDSS__licensed_provider_addresses__2026-09.csv` | street, city and ZIP for 3,183 VDSS facilities, keyed by `facility_id` | harvested locality by locality from the VDSS search tool by `harvest_va_addresses.py` |
+
+The bulk register carries no address, which is why Virginia alone could not have
+its program overlap measured. The search tool does, but returns only 58.1% of
+the register and under-represents religious-exempt centers. See sub-step 4.2 of
+the memo for what that allows.

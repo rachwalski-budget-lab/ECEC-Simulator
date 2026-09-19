@@ -227,7 +227,7 @@ va_assemble_providers <- function(spec) {
 #   NJ              64.7%                    62.7%
 #   NY              77.3%                    77.5%
 #   NYC             70.6%                    67.9%
-#   VA              mean of the four -- its register publishes no address
+#   VA              mean of the four -- see below
 #
 # CHECKS OUT against the earlier county build, which measured the same quantity
 # independently: KY 38.1% against 37.1% here, NJ 63.0% against 64.7%. New York
@@ -241,6 +241,45 @@ va_assemble_providers <- function(spec) {
 # licensing, so the true figure is probably well below 1. Settling it needs
 # NCES's EDGE school geocode file, which is not held here.
 
+
+# VIRGINIA MEASURED, AND THE BORROWED MEAN SURVIVES IT.
+#
+# VDSS publishes no address in the bulk register, which is why VA alone took
+# the mean. Its SEARCH TOOL does publish one, so 3,183 addresses were harvested
+# by locality (harvest_va_addresses.py) and joined on facility_id -- 99.96% of
+# harvested rows join. Held at
+# by-state/VA/raw/VA_VDSS__licensed_provider_addresses__2026-09.csv.
+#
+# The search returns only 58.1% of the register, and NOT at random:
+#
+#   Child Day Center                  2,590 rows   68.9% addressed
+#   Family Day Home                   1,343        51.7%
+#   Religious Exempt Child Day Center   861        18.8%
+#   Certified Pre-School                 21         0.0%
+#
+# All ten client codes were sent, including 2105 religious exempt and 2104
+# certified preschool, and the missing rows share the register's id space and
+# do not appear under another name. The by-locality search simply does not
+# return them. Ten localities return nothing at all, but they hold 69 of 5,474
+# rows, so they are not the cause.
+#
+# Fewer register addresses means fewer chances to match, so the measurement is
+# a FLOOR. Dividing by coverage gives a ceiling, on the assumption that the
+# unaddressed 41.9% match at the same rate:
+#
+#                     floor   ceiling   borrowed mean
+#   pre-K             27.5%    47.3%       44.0%
+#   Head Start        36.7%    63.2%       62.2%
+#   Early Head Start  53.5%    92.1%       64.7%
+#
+# EVERY BORROWED VALUE SITS INSIDE ITS OWN BRACKET, so the mean is kept. It is
+# no longer a placeholder -- it is a figure Virginia's own data is consistent
+# with. The ceiling is not used: at 92.1% Early Head Start would exceed every
+# measured state, which says the coverage adjustment is unstable on 63
+# locations.
+#
+# WHAT WOULD SETTLE IT is the register export route that produced the 5,474-row
+# file, with its address column kept. The search tool cannot reach the rest.
 
 SPEC_VA <- list(
   geo    = 'VA',

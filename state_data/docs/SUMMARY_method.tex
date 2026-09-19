@@ -647,7 +647,7 @@ KY  & 37.0\% & 37.1\% & 50.6\% & 38.1\% \\
 NJ  & 55.4\% & 64.7\% & 62.7\% & 63.0\% \\
 NY  & 52.2\% & 77.3\% & 77.5\% & 49.3\% \\
 NYC & 31.2\% & 70.6\% & 67.9\% & --- \\
-VA  & \multicolumn{3}{l}{register publishes no address; takes the mean} & --- \\
+VA  & 27.5\% & 36.7\% & 53.5\% & --- \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -656,6 +656,9 @@ The last column is the same quantity measured independently by the earlier count
 build, for Head Start only. KY and NJ agree to within 1.7 percentage points,
 which is the check on this method. NY differs because the match here reads both
 regulators, OCFS and DOHMH, and much of the state's Head Start sits in the city.
+
+Virginia's figures are in the table but the build does not use them, and
+sub-step 4.2 says why.
 
 Pre-K overlaps less than Head Start everywhere, which is what the licensing rules
 predict: a pre-K classroom inside a school building is usually exempt, while a
@@ -673,10 +676,69 @@ Three caveats.
 \item The federal files are 2026 exports and the registers are not, so a site
       that has since closed or moved fails to match. Every figure is therefore a lower
       limit, and KY's is the least reliable because its register is from 2018.
-\item VA cannot be matched at all, so it takes the mean of the other four. That
-      is the least defensible number in the table, and VA is also the geography
-      the calibration moves furthest.
+\item VA can now be matched, but only across 58 percent of its register, so its
+      figures are a floor rather than a measurement. Sub-step 4.2 gives what
+      that allows and why the borrowed mean is kept.
 \end{itemize}
+
+\subsubsection*{4.2 Why Virginia keeps a borrowed figure}
+
+VDSS publishes no address in the register the build reads, so Virginia was the
+one geography whose overlap could not be measured. Its
+\href{https://legacy.dss.virginia.gov/facility/search/cc2.cgi}{search tool} does
+publish one. I harvested 3,183 addresses by locality and joined them to the
+register on facility id, where 99.96 percent of harvested rows join.
+
+The search returns only 58.1 percent of the register, and not at random.
+
+\begin{table}[H]
+\centering
+\caption{Virginia register rows carrying a harvested address}
+\begin{tabular}{L{7.0cm}rr}
+\toprule
+& \textbf{Rows} & \textbf{Addressed} \\
+\midrule
+Child Day Center                  & 2,590 & 68.9\% \\
+Family Day Home                   & 1,343 & 51.7\% \\
+Religious Exempt Child Day Center &   861 & 18.8\% \\
+Certified Pre-School              &    21 &  0.0\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+That is not a filter I set wrongly. All ten of the search's own client codes
+were sent, including the ones for religious exempt centers and certified
+preschools. The missing rows share the register's id space and do not appear
+under another name. The search simply does not return them. Ten localities
+return nothing at all, but they hold 69 of 5,474 rows, so they are not the
+cause.
+
+Fewer register addresses means fewer chances to match, so the measurement is a
+floor. Dividing by coverage gives a ceiling, on the assumption that the
+unaddressed 41.9 percent match at the same rate.
+
+\begin{table}[H]
+\centering
+\caption{What Virginia's own data allows, against the borrowed mean}
+\begin{tabular}{L{4.6cm}rrr}
+\toprule
+& \textbf{Floor} & \textbf{Ceiling} & \textbf{Borrowed mean} \\
+\midrule
+Public pre-K     & 27.5\% & 47.3\% & 44.0\% \\
+Head Start       & 36.7\% & 63.2\% & 62.2\% \\
+Early Head Start & 53.5\% & 92.1\% & 64.7\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Every borrowed value sits inside its own bracket, so the build keeps the mean.
+It is no longer a placeholder: it is a figure Virginia's own data is consistent
+with. The ceiling is not used either. At 92.1 percent Early Head Start would
+exceed every measured state, which says the coverage adjustment is unstable on
+63 locations.
+
+What would settle it is whatever export produced the 5,474-row register, with
+its address column kept. The search tool cannot reach the rest.
 
 \subsection*{Step 5. Calibrate the total to the survey}
 
